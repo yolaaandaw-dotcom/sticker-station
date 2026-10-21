@@ -266,26 +266,8 @@ select { font: 11px var(--ui-font); padding: 3px 4px; border: 1px solid #777; bo
    MATERIALS  (two fx layers per sticker, masked to its shape)
    =========================================================== */
 
-/* -- crystal: faceted gem, hard specular sweep + twinkling stars -- */
-.mat-crystal img { filter: contrast(1.06) saturate(1.1); }
-.mat-crystal .fx-1 {
-  background: linear-gradient(calc(110deg + var(--px) * 35deg),
-    transparent 32%, rgba(255,255,255,0) 44%, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 56%, transparent 68%);
-  background-size: 260% 260%;
-  background-position: calc(50% - var(--px) * 70%) calc(50% - var(--py) * 70%);
-  mix-blend-mode: screen; opacity: .95;
-}
-.mat-crystal .fx-2 {
-  background:
-    var(--sparkle) calc(var(--lx) * .9 + 5%) calc(var(--ly) * .8 + 10%) / 26% auto no-repeat,
-    radial-gradient(circle at 28% 24%, #fff 0 1.6px, transparent 3.5px),
-    radial-gradient(circle at 72% 62%, #fff 0 1.2px, transparent 3px),
-    radial-gradient(circle at 44% 78%, #fff 0 1.3px, transparent 3px),
-    radial-gradient(circle at 80% 22%, #fff 0 1px, transparent 2.4px);
-  mix-blend-mode: screen;
-  animation: twinkle 1.7s ease-in-out infinite; animation-delay: calc(var(--seed, 0) * -1.7s);
-}
-@keyframes twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+/* -- crystal: gem, shown exactly as the picture (no extra layers) -- */
+.mat-crystal .fx-1, .mat-crystal .fx-2 { display: none; }
 
 /* -- glitter: dense flakes that shift against each other with the light -- */
 .mat-glitter img { filter: contrast(1.04) saturate(1.15); }
@@ -318,7 +300,7 @@ select { font: 11px var(--ui-font); padding: 3px 4px; border: 1px solid #777; bo
 }
 
 /* -- foil: gold-stamped print with a metallic rim -- */
-.mat-foil img { filter: sepia(.45) saturate(1.5) contrast(1.15) brightness(1.02); }
+.mat-foil img { filter: saturate(1.08) contrast(1.04); }
 .mat-foil .st-body {
   filter: drop-shadow(1.3px 0 0 #c9a227) drop-shadow(-1.3px 0 0 #c9a227) drop-shadow(0 1.3px 0 #e2c24a) drop-shadow(0 -1.3px 0 #a37f12)
           drop-shadow(0 1px 1px rgba(0,0,0,.3)) drop-shadow(0 3px 3px rgba(0,0,0,.15));
@@ -330,8 +312,7 @@ select { font: 11px var(--ui-font); padding: 3px 4px; border: 1px solid #777; bo
   mix-blend-mode: overlay; opacity: .95;
 }
 .mat-foil .fx-2 {
-  background: repeating-linear-gradient(calc(-30deg + var(--px) * 20deg), rgba(255,255,255,.18) 0 2px, transparent 2px 6px);
-  mix-blend-mode: soft-light;
+  display: none;
 }
 
 /* -- puffy: fat vinyl bubble sticker, soft inner highlight + thick white rim -- */
@@ -433,7 +414,7 @@ select { font: 11px var(--ui-font); padding: 3px 4px; border: 1px solid #777; bo
   .statusbar .hint { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mat-crystal .fx-2, .mat-glitter .fx-2 { animation: none; }
+  .mat-glitter .fx-2 { animation: none; }
 }
 
 /* ---------- imported sheet tabs ---------- */
@@ -517,3 +498,11 @@ select { font: 11px var(--ui-font); padding: 3px 4px; border: 1px solid #777; bo
 .toast.show { pointer-events: auto; }
 .toast-btn { margin-left: 12px; font: 700 11px var(--ui-font); color: #111; background: #9effa0; border: 0; border-radius: 3px; padding: 3px 9px; cursor: pointer; }
 .toast-btn:hover { background: #fff; }
+
+/* ---------- shadows cast onto the stickers underneath ---------- */
+.ov-shadow { position: absolute; pointer-events: none; z-index: 0; transition: opacity .2s; }
+.ov-shadow[hidden] { display: none; }
+.sticker > .st-body { z-index: 1; }
+.sticker.lifted .ov-shadow, .sticker.peeloff .ov-shadow { opacity: 0; }   /* in the air: it is not resting on anything */
+.sticker.stick .ov-shadow { animation: ovIn .5s ease-out both; }
+@keyframes ovIn { from { opacity: 0; } to { opacity: 1; } }

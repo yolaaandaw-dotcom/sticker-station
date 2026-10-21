@@ -6,10 +6,10 @@
    from its alpha (a dome + a bevelled rim) and its luminance
    (facets / embossing), so light from the pointer can hit
    actual slopes:
-     crystal  faceted gem: facet shading, dispersion fire, star glints
+     crystal  gem: shown exactly as the picture (no added effect)
      glitter  hex sequins, each with its own tilt, flashing one by one
      holo     rainbow diffraction that sweeps with the angle
-     foil     gold metal: environment reflection bands, gold specular
+     foil     gold on the printed gold + a thin rim, soft sheen elsewhere
      puffy    domed vinyl bubble with soft highlight + edge occlusion
      felt     fibre grain, velvet sheen, fuzzy edge
      paper    matte with a hint of grain
@@ -21,7 +21,7 @@
 'use strict';
 
 const MAT_ID = { crystal: 0, glitter: 1, holo: 2, foil: 3, puffy: 4, felt: 5, paper: 6, vinyl: 7 };
-const ANIMATED = { crystal: 1, glitter: 1, holo: 1 };   // twinkle over time even with a still light
+const ANIMATED = { glitter: 1, holo: 1 };   // twinkle over time even with a still light
 const COLOR_MAX = 768, HEIGHT_MAX = 320, CANVAS_MAX = 760;
 
 const VERT = `
@@ -87,10 +87,10 @@ void main(){
   hx /= 2. * e.x * (uSize.x / ms); hy /= 2. * e.y * (uSize.y / ms);
   float m = uMat;
   vec3 w;
-  if (m < .5)      w = vec3(.035, .012, .004);  // crystal: gentle; the picture already has its own facets
+  if (m < .5)      w = vec3(0.);                // gem: no added relief
   else if (m < 1.5) w = vec3(.06, .005, .010);  // glitter
   else if (m < 2.5) w = vec3(.05, .005, .008);  // holo
-  else if (m < 3.5) w = vec3(.08, .030, .026);  // foil
+  else if (m < 3.5) w = vec3(.04, .006, .016);  // foil: smooth, just a soft rim
   else if (m < 4.5) w = vec3(.30, .003, .020);  // puffy
   else if (m < 5.5) w = vec3(.04, .006, .012);  // felt
   else if (m < 6.5) w = vec3(.02, .004, .005);  // paper
@@ -104,16 +104,7 @@ void main(){
   float ndh = max(dot(N, Hh), 0.);
   float rel = dot(N, L) - L.z;             // >0 where the surface turns toward the light
 
-  if (m < .5) {                            // ---------- crystal ----------
-    col = clamp((col - .5) * 1.08 + .5, 0., 1.);
-    col *= 1. + .35 * rel;                                   // facets turned to the light brighten a little
-    col *= mix(.92, 1.03, smoothstep(.3, .9, h0.r));         // a hint of depth toward the girdle
-    vec3 o = vec3(24. * uK, 0., 0.);
-    float sR = pow(max(dot(N, normalize(normalize(Lv + o) + V)), 0.), 90.);
-    float sG = pow(ndh, 90.);
-    float sB = pow(max(dot(N, normalize(normalize(Lv - o) + V)), 0.), 90.);
-    col += vec3(sR, sG, sB) * .7 + pow(ndh, 14.) * .05;    // dispersion: a faint rainbow fire
-    col += glints(px, 36. * uK, 260., .35) * .55;            // an occasional star where a facet mirrors the light
+  if (m < .5) {                            // ---------- gem: the picture as it is, no added shading ----------
   } else if (m < 1.5) {                    // ---------- glitter ----------
     col *= 1. + .35 * rel;
     // sequins on a rotated, jittered grid so it never reads as a mosaic
@@ -148,18 +139,20 @@ void main(){
     col += rb * pow(ndh, 40.) * .7;
     col += glints(px, 34. * uK, 300., .3) * .4;
   } else if (m < 3.5) {                    // ---------- gold foil ----------
+    // metal only where gold belongs (gold already printed on the sticker + a thin rim);
+    // the picture itself stays smooth and keeps its colours, with a soft overall sheen
     vec3 R = reflect(-V, N);
-    float env = .12 + 1.25 * pow(max(dot(R, L), 0.), 14.) + .35 * pow(max(dot(R, normalize(vec3(-L.xy, L.z))), 0.), 5.);
-    env += .12 * sin((R.x * 2.3 + R.y * 1.1) * 9.);           // stamped / brushed banding
+    float env = .35 + .9 * pow(max(dot(R, L), 0.), 10.);
     float lu = luma(col);
-    float t = env * (.45 + .8 * lu);
-    vec3 gold = mix(vec3(.2, .12, .03), vec3(.93, .69, .22), smoothstep(0., .7, t));
-    gold += vec3(1., .93, .7) * smoothstep(.75, 1.5, t);
-    float gm = smoothstep(.12, .3, col.r - col.b) * smoothstep(.45, .7, lu) * step(col.b, col.g);   // gold already printed
-    float rim = 1. - smoothstep(.55, .95, h0.b);
-    float mm = clamp(max(max(gm, rim), .42), 0., 1.);
-    col = mix(col * (1. + .6 * rel), gold, mm);
-    col += vec3(1., .88, .55) * pow(ndh, 80.) * 1.4 * mm;
+    float t = env * (.55 + .6 * lu);
+    vec3 gold = mix(vec3(.62, .45, .16), vec3(1., .83, .42), smoothstep(.2, .9, t));
+    gold += vec3(1., .95, .8) * smoothstep(.9, 1.4, t) * .6;
+    float gm = smoothstep(.12, .3, col.r - col.b) * smoothstep(.45, .7, lu) * step(col.b, col.g);
+    float rim = 1. - smoothstep(.6, .92, h0.b);
+    float mm = clamp(max(gm * .85, rim * .9), 0., 1.);
+    col = mix(col * (1. + .25 * rel), gold, mm);
+    col += vec3(1., .9, .6) * pow(ndh, 60.) * .3;
+    col += vec3(1., .88, .55) * pow(ndh, 90.) * .8 * mm;
   } else if (m < 4.5) {                    // ---------- puffy ----------
     col *= 1. + .7 * rel;
     col *= mix(.72, 1., smoothstep(.1, .8, h0.r));

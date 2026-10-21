@@ -72,10 +72,10 @@ python3 -I tools/build_index.py
 
 | 材质 | 看起来 | 撕起来 |
 |---|---|---|
-| 宝石 crystal | 平顶切面，朝光的面亮、背光的面暗，切面边缘有彩虹火彩，偶尔闪十字星 | 中等偏硬，"嗒嗒"的硬塑料声，脱离时一声玻璃"叮" |
+| 宝石 crystal | 原图本身，不加任何光效 | 中等偏硬，"嗒嗒"的硬塑料声，脱离时一声玻璃"叮" |
 | 闪粉 glitter | 一片片亮片各有角度，光扫过时一颗颗轮流闪，自己也会微微闪烁 | 中等，沙沙的细颗粒声，脱离时一串高音碎闪 |
 | 镭射 holo | 彩虹随角度流动，有细光栅纹 | 中等，塑料膜的窸窣声 |
-| 烫金 foil | 金属反射带随光移动，金色高光，边缘一圈金 | 硬，金属箔的皱响，脱离时"铮"一声 |
+| 烫金 foil | 图案保持平滑原色，只有印好的金线和一圈金边是金属反光，整体一层淡淡的光泽 | 硬，金属箔的皱响，脱离时"铮"一声 |
 | 泡泡 puffy | 鼓起的软胶，大块柔光加边缘暗角 | 偏硬，软软的"噗叽"声，脱离时"啵" |
 | 毛毡 felt | 纤维颗粒、绒面的边缘光、毛边 | 最轻，闷闷的"嘶" |
 | 亚光纸 paper | 纸纹，几乎不反光 | 轻，干脆的纸声，脱离时"嘶啦" |
@@ -96,6 +96,7 @@ python3 -I tools/build_index.py
   - 可以直接从别的网页把图片拖过来。有些网站不允许别的网页读取它的图片，这时会提示你先把图片存下来再拖文件。
   - 粘贴（⌘V）也可以；手机上点虚线框选文件。
 - 语言：右上角「中文 / EN」切换，默认英文。文字都在 `i18n.js`，加语言就是多加一列。
+- 叠贴：贴纸叠在别的贴纸上时，会在下面那张贴纸上投下阴影（只落在下面的贴纸上，不落在纸上），导出 PNG 也带着。
 - 「▦ Paper」换画布纸，「⤓ Save PNG」导出。
 
 ## 结构
@@ -105,7 +106,7 @@ index.html / style.css / app.js   站点本体
 materials.js                      WebGL 材质着色器
 cutter.js                         网页里的自动切贴纸（Web Worker + 切贴纸窗口）
 i18n.js                           英文 / 中文界面文字
-sheets/                           原始贴纸纸（gems 宝石 / cats 猫咪 / hellokitty / zoo / feltcats / holy）
+sheets/                           原始贴纸纸（gems 宝石 / cats 猫咪 / hellokitty / zoo / feltcats）
 stickers/<sheet>/*.png            切好的贴纸 + manifest.json
 stickers/sheets.json              每张纸的名字和默认材质
 stickers/index.js                 自动生成的贴纸清单
@@ -121,6 +122,5 @@ python3 -I tools/cut_sheet.py sheets/cats.webp stickers/cats --bg 236,224,50 --t
 python3 -I tools/cut_sheet.py sheets/hellokitty.webp stickers/hellokitty --tol 70 --gap 3 --min-area 900
 python3 -I tools/cut_sheet.py sheets/zoo.webp stickers/zoo --tol 42 --gap 4 --min-area 6000
 python3 -I tools/cut_sheet.py sheets/feltcats.png stickers/feltcats --tol 40 --gap 3 --min-area 2500
-python3 -I tools/cut_sheet.py sheets/holy.webp stickers/holy --fg-expr "~((b - np.maximum(r,g) > 6) | (np.minimum(np.minimum(r,g),b) > 185))" --close 3 --grow 1 --gap 1 --min-area 1200 --crop 12,104,552,812
 python3 -I tools/build_index.py
 ```

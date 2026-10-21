@@ -46,6 +46,8 @@ const DB = (() => {
 })();
 const FILES = new Map();                     // "idb:..." key -> object URL for this session
 const fileURL = key => FILES.get(key) || key;
+// a placed sticker can only be drawn if its picture still belongs to some sheet (sheets can be removed)
+const knownFile = f => sheets.some(s => s.items.some(i => i.file === f));
 
 // ---------- DOM ----------
 const canvasEl = $('#canvas'), trayEl = $('#tray'), floatLayer = $('#float-layer'),
@@ -305,7 +307,7 @@ function checkpoint(tag) {                 // call BEFORE changing the canvas
 }
 function restore(json) {
   for (const el of placedEls.values()) el.remove(); placedEls.clear();
-  state.placed = JSON.parse(json).filter(p => !String(p.file).startsWith('idb:') || FILES.has(p.file));
+  state.placed = JSON.parse(json).filter(p => knownFile(p.file));
   for (const it of state.placed) addPlacedEl(it, false);
   select(null); updateCount(); save();
 }
@@ -327,6 +329,91 @@ function applyTransform(item, el, extraTilt = 0) {
   el.style.zIndex = item.z;
   el._rot = item.rot + extraTilt; el._flip = item.flip; el._scale = item.scale;
   el.style.setProperty('--s', item.scale);
+  markShadows();
+}
+
+// ---------- shadows that stickers cast onto the stickers underneath ----------
+// Each placed sticker gets a canvas behind its body. It holds the sticker's own shadow, cut to the
+// shapes of the stickers below it, so the shadow shows on those stickers and not on the paper.
+const OV_M = 18;                              // px of room around a sticker for its shadow to spread
+const OV_PASSES = [                           // screen-space offset, blur and darkness: a contact edge + a soft spread
+  { dx: .7, dy: 1.6, blur: 1.2, a: .5 },
+  { dx: 2.5, dy: 6, blur: 5.5, a: .4 },
+];
+let shadowTimer = 0, shadowLast = 0;
+function markShadows() {                      // batch changes; refresh at most ~15 times a second
+  if (shadowTimer) return;
+  const wait = Math.max(16, 66 - (performance.now() - shadowLast));
+  shadowTimer = setTimeout(() => { shadowTimer = 0; shadowLast = performance.now(); updateShadows(); }, wait);
+}
+function stickerMatrix(item) {
+  const { dw, dh } = dims(item, K_CANVAS, MAX_CANVAS);
+  return new DOMMatrix().translate(item.cx, item.cy).rotate(item.rot)
+    .scale(item.flip ? -item.scale : item.scale, item.scale).translate(-dw / 2, -dh / 2);
+}
+function stickerBox(item) {
+  const { dw, dh } = dims(item, K_CANVAS, MAX_CANVAS), m = stickerMatrix(item);
+  const pts = [[0, 0], [dw, 0], [0, dh], [dw, dh]].map(([x, y]) => m.transformPoint(new DOMPoint(x, y)));
+  return { x0: Math.min(...pts.map(p => p.x)), x1: Math.max(...pts.map(p => p.x)), y0: Math.min(...pts.map(p => p.y)), y1: Math.max(...pts.map(p => p.y)) };
+}
+function updateShadows() {
+  const items = [...state.placed].sort((p, q) => p.z - q.z);
+  const boxes = new Map(items.map(it => [it.id, stickerBox(it)]));
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  items.forEach((A, idx) => {
+    const el = placedEls.get(A.id); if (!el) return;
+    const bA = boxes.get(A.id), pad = 10;
+    const below = items.slice(0, idx).filter(B => { const b = boxes.get(B.id);
+      return b.x0 < bA.x1 + pad && b.x1 > bA.x0 - pad && b.y0 < bA.y1 + pad && b.y1 > bA.y0 - pad; });
+    let cv = el.querySelector('.ov-shadow');
+    if (!below.length) { if (cv) cv.hidden = true; return; }
+    const imgA = el.querySelector('.st-body > img');
+    if (!imgA || !imgA.complete || !imgA.naturalWidth) { markShadows(); return; }
+    const { dw, dh } = dims(A, K_CANVAS, MAX_CANVAS);
+    const k = Math.min(dpr * A.scale, 4);
+    const W = Math.round((dw + 2 * OV_M) * k), H = Math.round((dh + 2 * OV_M) * k);
+    if (!cv) { cv = document.createElement('canvas'); cv.className = 'ov-shadow'; el.prepend(cv); }
+    cv.hidden = false;
+    if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+    Object.assign(cv.style, { left: -OV_M + 'px', top: -OV_M + 'px', width: dw + 2 * OV_M + 'px', height: dh + 2 * OV_M + 'px' });
+    const g = cv.getContext('2d');
+    g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'source-over'; g.filter = 'none'; g.clearRect(0, 0, W, H);
+    // 1. the shapes of the stickers below, in this sticker's own frame
+    const base = new DOMMatrix().scale(k).translate(OV_M, OV_M), invA = stickerMatrix(A).inverse();
+    let missing = false;
+    for (const B of below) {
+      const imgB = placedEls.get(B.id) && placedEls.get(B.id).querySelector('.st-body > img');
+      if (!imgB || !imgB.complete || !imgB.naturalWidth) { missing = true; continue; }
+      const { dw: bw, dh: bh } = dims(B, K_CANVAS, MAX_CANVAS);
+      g.setTransform(base.multiply(invA).multiply(stickerMatrix(B)));
+      g.drawImage(imgB, 0, 0, bw, bh);
+    }
+    if (missing) markShadows();
+    // 2. this sticker's shadow (screen-space offset turned into its own frame), kept only on those shapes
+    const sil = shadowSilhouette(imgA, Math.round(dw * k), Math.round(dh * k));
+    const sh = document.createElement('canvas'); sh.width = W; sh.height = H;
+    const s = sh.getContext('2d');
+    const ang = -A.rot * Math.PI / 180, ca = Math.cos(ang), sa = Math.sin(ang);
+    for (const p of OV_PASSES) {
+      let lx = (p.dx * ca - p.dy * sa) / A.scale, ly = (p.dx * sa + p.dy * ca) / A.scale;
+      if (A.flip) lx = -lx;
+      s.globalAlpha = p.a; s.filter = `blur(${(p.blur * dpr).toFixed(2)}px)`;
+      s.drawImage(sil, (OV_M + lx) * k, (OV_M + ly) * k, dw * k, dh * k);
+    }
+    g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'source-in';
+    g.drawImage(sh, 0, 0);
+    g.globalCompositeOperation = 'source-over';
+  });
+}
+const silCache = new Map();
+function shadowSilhouette(img, w, h) {
+  const key = img.src.slice(-80) + '|' + w + 'x' + h;
+  if (silCache.has(key)) return silCache.get(key);
+  const c = document.createElement('canvas'); c.width = Math.max(1, w); c.height = Math.max(1, h);
+  const g = c.getContext('2d'); g.drawImage(img, 0, 0, c.width, c.height);
+  g.globalCompositeOperation = 'source-in'; g.fillStyle = '#1a1206'; g.fillRect(0, 0, c.width, c.height);
+  if (silCache.size > 200) silCache.clear();
+  silCache.set(key, c); return c;
 }
 function addPlacedEl(item, animate) {
   const { dw, dh } = dims(item, K_CANVAS, MAX_CANVAS);
@@ -362,12 +449,14 @@ function addPlacedEl(item, animate) {
   el.addEventListener('dblclick', () => { checkpoint(); item.flip = !item.flip; applyTransform(item, el); sTick(); save(); });
   el.addEventListener('contextmenu', e => { e.preventDefault(); openMenu(e.clientX, e.clientY, item, el); });
   canvasEl.append(el); placedEls.set(item.id, el);
+  el.querySelector('.st-body > img').addEventListener('load', markShadows);
+  markShadows();
   if (animate) { el.classList.add('stick'); setTimeout(() => el.classList.remove('stick'), 500); }
   canvasEl.classList.add('has-items');
   return el;
 }
 function removePlaced(item, el, animate = true) {
-  state.placed = state.placed.filter(p => p !== item); placedEls.delete(item.id);
+  state.placed = state.placed.filter(p => p !== item); placedEls.delete(item.id); markShadows();
   if (animate) { el.classList.add('peeloff'); sDetach(item.mat); setTimeout(() => el.remove(), 400); } else el.remove();
   updateCount(); save();
 }
@@ -874,11 +963,12 @@ async function exportPNG() {
     const pel = placedEls.get(item.id), lit = pel && pel._glOn ? pel._cv : null;
     const { dw, dh } = dims(item, K_CANVAS, MAX_CANVAS);
     g.save(); g.translate(item.cx, item.cy); g.rotate(item.rot * Math.PI / 180); g.scale(item.flip ? -item.scale : item.scale, item.scale);
+    const ov = pel && pel.querySelector('.ov-shadow');
+    if (ov && !ov.hidden) g.drawImage(ov, -dw / 2 - OV_M, -dh / 2 - OV_M, dw + 2 * OV_M, dh + 2 * OV_M);
     g.shadowColor = 'rgba(0,0,0,.28)'; g.shadowBlur = 3; g.shadowOffsetY = 2;
     const rim = RIM[item.mat];
     if (rim) { const t = tinted(img, rim[0]); const o = rim[1]; for (const [ox, oy] of [[o, 0], [-o, 0], [0, o], [0, -o], [o, o], [-o, -o], [o, -o], [-o, o]]) g.drawImage(t, -dw / 2 + ox, -dh / 2 + oy, dw, dh); }
     g.shadowColor = 'transparent';
-    if (!lit && item.mat === 'foil') g.filter = 'sepia(.45) saturate(1.5) contrast(1.15)';
     g.drawImage(lit || img, -dw / 2, -dh / 2, dw, dh); g.restore();
   }
   c.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'sticker-station.png'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }, 'image/png');
@@ -889,8 +979,9 @@ async function exportPNG() {
 I18N.apply(); updateUndoBtn();
 (async () => {
   await loadImportedSheets();
-  // placed stickers whose imported sheet is gone cannot be drawn any more
-  state.placed = state.placed.filter(p => !String(p.file).startsWith('idb:') || FILES.has(p.file));
+  // placed stickers whose sheet is gone (deleted import, or a sheet removed from the site) cannot be drawn any more
+  state.placed = state.placed.filter(p => knownFile(p.file));
+  if (!sheetOf(state.sheet)) state.sheet = sheets[0].id;
   fillMaterialSelect(); renderTabs(); renderTray(); applyPaper();
   for (const item of state.placed) addPlacedEl(item, false);
   updateCount();

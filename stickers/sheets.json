@@ -27,13 +27,6 @@
   },
   "material": "felt"
  },
- "holy": {
-  "label": {
-   "en": "Holy",
-   "zh": "圣像"
-  },
-  "material": "puffy"
- },
  "cats": {
   "label": {
    "en": "Cats",

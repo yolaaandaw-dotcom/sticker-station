@@ -24,7 +24,7 @@ const D = {
   sheetsTitle:  { en: 'sticker sheets', zh: '贴纸纸' },
   material:     { en: 'Material', zh: '材质' },
   matAuto:      { en: 'Auto (per sheet)', zh: '自动（按贴纸纸）' },
-  m_crystal:    { en: 'Gem facets', zh: '宝石切面' },
+  m_crystal:    { en: 'Gem', zh: '宝石' },
   m_glitter:    { en: 'Glitter', zh: '闪粉' },
   m_holo:       { en: 'Holographic', zh: '镭射' },
   m_foil:       { en: 'Gold foil', zh: '烫金' },
