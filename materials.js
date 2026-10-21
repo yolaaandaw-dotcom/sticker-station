@@ -87,7 +87,7 @@ void main(){
   hx /= 2. * e.x * (uSize.x / ms); hy /= 2. * e.y * (uSize.y / ms);
   float m = uMat;
   vec3 w;
-  if (m < .5)      w = vec3(.06, .034, .008);   // crystal: flat table, facets carry the shape
+  if (m < .5)      w = vec3(.035, .012, .004);  // crystal: gentle; the picture already has its own facets
   else if (m < 1.5) w = vec3(.06, .005, .010);  // glitter
   else if (m < 2.5) w = vec3(.05, .005, .008);  // holo
   else if (m < 3.5) w = vec3(.08, .030, .026);  // foil
@@ -105,15 +105,15 @@ void main(){
   float rel = dot(N, L) - L.z;             // >0 where the surface turns toward the light
 
   if (m < .5) {                            // ---------- crystal ----------
-    col = clamp((col - .5) * 1.25 + .5, 0., 1.);
-    col *= 1. + .8 * rel;                                    // facets turned to the light brighten, others fall dark
-    col *= mix(.8, 1.06, smoothstep(.3, .9, h0.r));          // a little depth toward the girdle
-    vec3 o = vec3(30. * uK, 0., 0.);
-    float sR = pow(max(dot(N, normalize(normalize(Lv + o) + V)), 0.), 55.);
-    float sG = pow(ndh, 55.);
-    float sB = pow(max(dot(N, normalize(normalize(Lv - o) + V)), 0.), 55.);
-    col += vec3(sR, sG, sB) * 1.7 + pow(ndh, 10.) * .1;    // dispersion: rainbow fire on the facet edges
-    col += glints(px, 22. * uK, 130., .3) * 1.1;             // stars where a facet mirrors the light
+    col = clamp((col - .5) * 1.08 + .5, 0., 1.);
+    col *= 1. + .35 * rel;                                   // facets turned to the light brighten a little
+    col *= mix(.92, 1.03, smoothstep(.3, .9, h0.r));         // a hint of depth toward the girdle
+    vec3 o = vec3(24. * uK, 0., 0.);
+    float sR = pow(max(dot(N, normalize(normalize(Lv + o) + V)), 0.), 90.);
+    float sG = pow(ndh, 90.);
+    float sB = pow(max(dot(N, normalize(normalize(Lv - o) + V)), 0.), 90.);
+    col += vec3(sR, sG, sB) * .7 + pow(ndh, 14.) * .05;    // dispersion: a faint rainbow fire
+    col += glints(px, 36. * uK, 260., .35) * .55;            // an occasional star where a facet mirrors the light
   } else if (m < 1.5) {                    // ---------- glitter ----------
     col *= 1. + .35 * rel;
     // sequins on a rotated, jittered grid so it never reads as a mosaic
