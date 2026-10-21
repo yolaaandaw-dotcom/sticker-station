@@ -1,0 +1,32 @@
+[
+ {
+  "name": "feltcats_01",
+  "file": "feltcats_01.png",
+  "w": 287,
+  "h": 174
+ },
+ {
+  "name": "feltcats_02",
+  "file": "feltcats_02.png",
+  "w": 212,
+  "h": 237
+ },
+ {
+  "name": "feltcats_03",
+  "file": "feltcats_03.png",
+  "w": 411,
+  "h": 212
+ },
+ {
+  "name": "feltcats_05",
+  "file": "feltcats_05.png",
+  "w": 295,
+  "h": 273
+ },
+ {
+  "name": "feltcats_04",
+  "file": "feltcats_04.png",
+  "w": 251,
+  "h": 288
+ }
+]

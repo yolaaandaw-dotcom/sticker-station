@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Sticker Station</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">
+    <span class="logo-main">Sticker<b>Station</b></span>
+    <span class="logo-sub" data-i18n="logoSub">an interactive sticker sheet · est. 2000</span>
+  </div>
+  <nav class="nav">
+    <button class="pill" id="btn-undo" data-i18n="undo" data-i18n-title="undoTip">↶ Undo</button>
+    <button class="pill" id="btn-sound" aria-pressed="true" data-i18n="sound" data-i18n-title="soundTip">♪ Sound</button>
+    <button class="pill" id="btn-paper" data-i18n="paper" data-i18n-title="paperTip">▦ Paper</button>
+    <button class="pill" id="btn-export" data-i18n="export" data-i18n-title="exportTip">⤓ Save PNG</button>
+    <button class="pill danger" id="btn-clear" data-i18n="clear" data-i18n-title="clearTip">✕ Clear</button>
+    <button class="pill lang" id="btn-lang" data-i18n="lang" data-i18n-title="langTip">中文</button>
+  </nav>
+</header>
+
+<main class="desk">
+
+  <section class="window tray-window" id="tray-window">
+    <div class="titlebar"><span class="tb-lines"></span><span class="tb-title" data-i18n="sheetsTitle">sticker sheets</span><span class="tb-lines"></span></div>
+    <div class="tray-tabs" id="tray-tabs"></div>
+    <div class="tray-tools">
+      <label class="field"><span data-i18n="material">Material</span>
+        <select id="material-select"></select>
+      </label>
+    </div>
+    <label class="dropzone" id="dropzone" data-i18n-title="dropZoneTip">
+      <span data-i18n="dropZone"></span>
+      <input type="file" id="file-input" accept="image/*" multiple hidden>
+    </label>
+    <div class="sheet-paper">
+      <div class="sheet-head"><span>STICKER</span><small>we have hopes because we have love · made in browser</small></div>
+      <div class="tray" id="tray"></div>
+    </div>
+  </section>
+
+  <section class="window canvas-window" id="canvas-window">
+    <div class="titlebar"><span class="tb-lines"></span><span class="tb-title">untitled.canvas</span><span class="tb-lines"></span></div>
+    <div class="canvas paper-white" id="canvas" aria-label="sticker canvas">
+      <div class="canvas-hint" id="canvas-hint" data-i18n="canvasHint"></div>
+      <div class="trash" id="trash" data-i18n="trash" hidden></div>
+    </div>
+    <div class="statusbar">
+      <span><span data-i18n="placed">placed:</span> <b id="count">0</b></span>
+      <span class="led" id="odometer" title="total stickers ever stuck">000000</span>
+      <span class="hint" data-i18n="statusTip"></span>
+    </div>
+  </section>
+
+</main>
+
+<div id="float-layer"></div>
+<div id="ctx-menu" class="ctx-menu" hidden></div>
+<div id="drop-hint" class="drop-hint" hidden><span id="drop-hint-text"></span></div>
+
+<script src="i18n.js"></script>
+<script src="stickers/index.js"></script>
+<script src="materials.js"></script>
+<script src="cutter.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

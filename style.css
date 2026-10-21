@@ -1,0 +1,519 @@
+/* ===========================================================
+   Sticker Station — retro desk + sticker materials
+   =========================================================== */
+:root {
+  --desk: #d2d0cc;
+  --ink: #111;
+  --win: #ececea;
+  --win-border: #777;
+  --aqua-a: #cfe6ff;
+  --aqua-b: #4f9bf0;
+  --aqua-c: #2b6fd0;
+  --ui-font: "Verdana", "Geneva", "Lucida Grande", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --logo-font: "Times New Roman", "Songti SC", "SimSun", serif;
+  --noise: none;
+  --glitter: none;
+  --glitter2: none;
+  --sparkle: none;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font: 12px/1.45 var(--ui-font);
+  color: var(--ink);
+  background: var(--desk);
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(255,255,255,.55), transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(120,110,100,.25), transparent 50%);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  -webkit-user-select: none; user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+body::before {               /* paper grain over the whole desk */
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: var(--noise); background-size: 180px 180px; opacity: .18; mix-blend-mode: multiply;
+}
+
+/* ---------- top chrome ---------- */
+.topbar {
+  position: relative; z-index: 2;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 14px 18px 8px;
+}
+.logo { display: flex; flex-direction: column; line-height: 1; }
+.logo-main {
+  font: italic 700 34px/1 var(--logo-font); letter-spacing: -.5px;
+  color: #1a1a1a;
+  text-shadow: 1px 1px 0 #fff, 2px 2px 0 #9a9a9a, 3px 3px 0 #6d6d6d, 4px 4px 6px rgba(0,0,0,.25);
+}
+.logo-main b { font-style: italic; color: #d1227a; }
+.logo-sub { margin-top: 6px; font-size: 11px; color: #444; letter-spacing: .3px; }
+.nav { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.pill {
+  font: 700 11px/1 var(--ui-font); color: #0a1a33;
+  padding: 7px 13px; border-radius: 999px; border: 1px solid #1d4a90; cursor: pointer;
+  background: linear-gradient(#f4faff 0%, var(--aqua-a) 45%, var(--aqua-b) 50%, #8fc3ff 100%);
+  box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.35);
+  text-shadow: 0 1px 0 rgba(255,255,255,.7);
+  white-space: nowrap;
+}
+.pill:hover { filter: brightness(1.06); }
+.pill:active { transform: translateY(1px); box-shadow: inset 0 2px 3px rgba(0,0,0,.3); }
+.pill.danger { background: linear-gradient(#fff2f2 0%, #ffcccc 45%, #ff6b6b 50%, #ff9a9a 100%); border-color: #8d1f1f; }
+#btn-sound[aria-pressed="false"] { opacity: .55; filter: grayscale(1); }
+.pill:disabled { opacity: .45; filter: grayscale(1); pointer-events: none; }
+.pill.lang { min-width: 52px; background: linear-gradient(#fffbea 0%, #fff0b8 45%, #f2c94c 50%, #ffe08a 100%); border-color: #8a6a10; }
+
+/* ---------- desk layout ---------- */
+.desk {
+  position: relative; z-index: 1;
+  flex: 1; display: grid; gap: 14px; padding: 14px;
+  grid-template-columns: 330px 1fr;
+  align-items: stretch;
+}
+.window {
+  background: var(--win); border: 1px solid #5c5c5c; border-radius: 6px 6px 3px 3px;
+  box-shadow: 0 1px 0 #fff inset, 0 10px 24px -12px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.4);
+  display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+}
+.titlebar {
+  display: flex; align-items: center; gap: 8px; padding: 4px 8px; background: #e2e2e2;
+  border-bottom: 1px solid #8a8a8a; font-weight: 700; font-size: 11px; color: #222;
+}
+.tb-lines { flex: 1; height: 11px;
+  background: repeating-linear-gradient(#fff 0 1px, #9a9a9a 1px 2px); border: 1px solid #c8c8c8; border-left: 0; border-right: 0; }
+.tb-title { padding: 0 6px; white-space: nowrap; }
+
+/* ---------- tray ---------- */
+.tray-window { max-height: calc(100vh - 150px); position: sticky; top: 10px; }
+.tray-window.drop-target { outline: 3px dashed #d1227a; outline-offset: -3px; }
+.tray-tabs { display: flex; gap: 4px; padding: 8px 8px 0; flex-wrap: wrap; }
+.tab {
+  font: 700 11px/1 var(--ui-font); padding: 6px 10px; border: 1px solid #777; border-bottom: 0;
+  border-radius: 6px 6px 0 0; background: #d9d9d9; cursor: pointer; color: #333;
+}
+.tab.active { background: #fff; color: #000; box-shadow: 0 2px 0 #fff; position: relative; z-index: 1; }
+.tray-tools { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px; background: #fff; border-top: 1px solid #777; }
+.field { font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+select { font: 11px var(--ui-font); padding: 3px 4px; border: 1px solid #777; border-radius: 4px; background: #f6f6f6; }
+
+.sheet-paper {
+  margin: 0 8px 8px; flex: 1; min-height: 0; overflow: auto; border-radius: 4px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.75), rgba(255,255,255,0) 40%),
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,.08) 1px, transparent 1.5px) 0 0/14px 14px,
+    #f3eee2;
+  border: 1px solid #aaa; box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 5px #cfc8b8, 0 1px 2px rgba(0,0,0,.2);
+}
+.sheet-head { display: flex; align-items: baseline; gap: 8px; padding: 10px 12px 2px; color: #3b2b6b; }
+.sheet-head span { font: 900 22px/1 var(--logo-font); letter-spacing: 2px; text-shadow: 1px 1px 0 #fff, 2px 2px 0 #b9a8e6; }
+.sheet-head small { font-size: 9px; color: #6b5fa0; letter-spacing: .5px; }
+.tray { display: flex; flex-wrap: wrap; gap: 10px 12px; padding: 10px 12px 16px; align-items: center; justify-content: center; }
+
+/* ---------- canvas ---------- */
+.canvas-window { min-height: 70vh; }
+.canvas {
+  position: relative; flex: 1; min-height: 60vh; overflow: hidden; cursor: default;
+  transition: background .3s;
+}
+.canvas-hint {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  pointer-events: none; text-align: center; padding: 20px;
+  font: italic 18px var(--logo-font); color: rgba(0,0,0,.3); letter-spacing: 1px;
+  transition: opacity .3s;
+}
+.canvas-hint small { display: block; font: 11px/1.7 var(--ui-font); font-style: normal; letter-spacing: .3px; color: rgba(0,0,0,.38); }
+.paper-black .canvas-hint small { color: rgba(255,255,255,.4); }
+.canvas.has-items .canvas-hint { opacity: 0; }
+.paper-white { background: #fdfdfb; }
+.paper-grid  { background: #fff
+  linear-gradient(rgba(60,120,255,.14) 1px, transparent 1px) 0 0/22px 22px,
+  linear-gradient(90deg, rgba(60,120,255,.14) 1px, transparent 1px) 0 0/22px 22px; }
+.paper-lined { background: #fffdf5
+  repeating-linear-gradient(transparent 0 25px, rgba(90,140,230,.35) 25px 26px); }
+.paper-black { background: #141416; }
+.paper-kraft { background: #cfae77; }
+.paper-pink  { background: #ffd9e6; }
+.paper-black .canvas-hint { color: rgba(255,255,255,.3); }
+.statusbar { display: flex; align-items: center; gap: 14px; padding: 5px 10px; border-top: 1px solid #8a8a8a; background: #e2e2e2; font-size: 11px; }
+.statusbar .hint { margin-left: auto; color: #666; }
+.led { font: 700 13px/1 "Monaco", "Menlo", monospace; letter-spacing: 3px; color: #8bff8f; background: #000; padding: 3px 6px 2px; border: 1px solid #444; border-radius: 3px; box-shadow: inset 0 0 6px #0a2; }
+
+/* ===========================================================
+   STICKERS
+   =========================================================== */
+.sticker {
+  position: absolute; left: 0; top: 0;
+  width: var(--dw); height: var(--dh);
+  touch-action: none; cursor: grab;
+  will-change: transform;
+  --px: 0; --py: 0;
+  --lx: calc(50% + var(--px) * 55%);
+  --ly: calc(50% + var(--py) * 55%);
+}
+.tray .sticker { position: relative; cursor: grab; }
+.tray .sticker.peel-active { z-index: 6; }
+.tray .sticker { transition: translate .3s cubic-bezier(.3,1.6,.5,1); }
+.tray .sticker.peel-active { transition: translate .05s linear; }
+/* the folded-over part of a sticker being peeled: its back side */
+.flap {
+  position: absolute; inset: 0; display: none; pointer-events: none; z-index: 4; transform-origin: 0 0;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)) drop-shadow(0 5px 7px rgba(0,0,0,.28));
+}
+.flap-in { position: absolute; inset: 0; }
+.sticker .flap img { display: block; width: 100%; height: 100%; filter: grayscale(1) brightness(1.75) contrast(.65) !important; }
+.flap .shade {
+  position: absolute; inset: 0;
+  -webkit-mask: var(--img) center / 100% 100% no-repeat; mask: var(--img) center / 100% 100% no-repeat;
+  background: linear-gradient(var(--peel-angle, 45deg), rgba(0,0,0,.32), rgba(0,0,0,.05) 45%, rgba(255,255,255,.18));
+}
+.sticker:active { cursor: grabbing; }
+.st-body {
+  position: relative; width: 100%; height: 100%;
+  transform-origin: 50% 50%;
+  transition: transform .18s cubic-bezier(.3,1.3,.5,1), filter .18s;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)) drop-shadow(0 2px 2px rgba(0,0,0,.12));
+}
+.st-body img { display: block; width: 100%; height: 100%; pointer-events: none; -webkit-user-drag: none; }
+.glfx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.sticker.gl-on .st-body > img { opacity: 0; }
+.sticker.gl-on .fx-1, .sticker.gl-on .fx-2 { display: none; }
+.fx {
+  position: absolute; inset: 0; pointer-events: none;
+  -webkit-mask: var(--img) center / 100% 100% no-repeat;
+          mask: var(--img) center / 100% 100% no-repeat;
+}
+
+/* --- states ---
+   A sticker is a thin flexible film: it hovers by curling, flaps while dragged,
+   and is laid down from the fingertip outward, not stamped. --- */
+@property --r { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+.sticker { --gx: 50%; --gy: 50%; --vx: 0; --vy: 0; --tilt: 0; }
+.sticker.hover .st-body {
+  transform: perspective(600px) rotateX(calc(var(--py) * -5deg)) rotateY(calc(var(--px) * 7deg)) translateY(-2px) scale(1.03);
+  filter: drop-shadow(0 3px 2px rgba(0,0,0,.18)) drop-shadow(0 7px 7px rgba(0,0,0,.16));
+}
+.sticker.taken .st-body {                     /* the backing paper left behind */
+  transform: scale(.97); filter: grayscale(1) opacity(.22) blur(.3px); transition: none;
+}
+.sticker.refill .st-body { animation: refill .45s cubic-bezier(.3,1.5,.5,1) both; }
+@keyframes refill { 0% { transform: scale(.5) rotate(-8deg); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+#float-layer { position: fixed; inset: 0; pointer-events: none; z-index: 900; overflow: visible; }
+#float-layer .sticker { cursor: grabbing; }
+.sticker.peeling .st-body {                   /* lifts around the fingertip, far edge still on the sheet */
+  transform-origin: var(--gx) var(--gy);
+  transform: perspective(600px) rotateX(-20deg) rotateY(calc((var(--gx) - 50%) / 50% * 10deg)) scale(1.04);
+  filter: drop-shadow(0 8px 5px rgba(0,0,0,.22)) drop-shadow(0 18px 16px rgba(0,0,0,.22));
+}
+.sticker.dragging .st-body, .sticker.lifted .st-body {   /* flaps: the edges lag behind the fingertip */
+  transform-origin: var(--gx) var(--gy);
+  transform: perspective(700px) rotateX(calc(var(--vy) * -0.9deg)) rotateY(calc(var(--vx) * 0.9deg)) rotateZ(calc(var(--tilt) * .3deg)) scale(1.04);
+  filter: drop-shadow(0 6px 4px rgba(0,0,0,.18)) drop-shadow(0 20px 20px rgba(0,0,0,.28));
+  transition: transform .09s ease-out, filter .25s;
+}
+.sticker.lifted .st-body { transform: perspective(700px) rotateX(calc(var(--vy) * -0.7deg)) rotateY(calc(var(--vx) * 0.7deg)) scale(1.02); }
+.sticker.stick .st-body {
+  transform-origin: var(--gx) var(--gy);
+  animation: layDown .6s cubic-bezier(.2,.7,.3,1) both;
+}
+@keyframes layDown {
+  0%   { transform: perspective(700px) rotateX(-16deg) rotateY(calc(var(--vx) * .6deg)) scale(1.025);
+         filter: drop-shadow(0 6px 4px rgba(0,0,0,.18)) drop-shadow(0 18px 18px rgba(0,0,0,.26)); }
+  38%  { transform: perspective(700px) rotateX(3.5deg) rotateY(calc(var(--vx) * -.2deg)) scale(1.004);
+         filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)) drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+  62%  { transform: perspective(700px) rotateX(-1.6deg) scale(1); }
+  82%  { transform: perspective(700px) rotateX(.6deg); }
+  100% { transform: none; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)) drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+}
+.fx-press { opacity: 0; }
+.sticker.stick .fx-press {                    /* the fingertip smoothing the film outward */
+  background: radial-gradient(circle at var(--gx) var(--gy),
+    transparent calc(var(--r) - 18%), rgba(255,255,255,.55) var(--r), rgba(255,255,255,0) calc(var(--r) + 8%));
+  mix-blend-mode: screen; opacity: 1;
+  animation: smooth .55s ease-out both;
+}
+@keyframes smooth { 0% { --r: 0%; opacity: .9; } 100% { --r: 140%; opacity: 0; } }
+.sticker.peeloff { pointer-events: none; }
+.sticker.peeloff .st-body { animation: peelOff .38s ease-in both; transform-origin: var(--gx) var(--gy); }
+@keyframes peelOff {
+  0%   { transform: perspective(500px) rotateX(0) scale(1.03); opacity: 1; }
+  100% { transform: perspective(500px) rotateX(-80deg) translateY(-24px) scale(.7); opacity: 0; }
+}
+.sticker.selected .st-body::after {
+  content: ""; position: absolute; inset: -5px; border: 1px dashed rgba(0,0,0,.35); border-radius: 6px; pointer-events: none;
+}
+.paper-black .sticker.selected .st-body::after { border-color: rgba(255,255,255,.45); }
+
+/* burst on stick */
+.burst { position: absolute; width: 0; height: 0; }
+.burst i {
+  position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--c, #fff); box-shadow: 0 0 6px var(--c, #fff);
+  transform: rotate(var(--a)) translateY(0); animation: fly .55s ease-out forwards;
+}
+.burst i.star { border-radius: 0; background: var(--sparkle) center / contain no-repeat; box-shadow: none; width: 14px; height: 14px; left: -7px; top: -7px; }
+@keyframes fly { to { transform: rotate(var(--a)) translateY(calc(var(--d) * -1)) scale(0); opacity: 0; } }
+
+/* ===========================================================
+   MATERIALS  (two fx layers per sticker, masked to its shape)
+   =========================================================== */
+
+/* -- crystal: faceted gem, hard specular sweep + twinkling stars -- */
+.mat-crystal img { filter: contrast(1.06) saturate(1.1); }
+.mat-crystal .fx-1 {
+  background: linear-gradient(calc(110deg + var(--px) * 35deg),
+    transparent 32%, rgba(255,255,255,0) 44%, rgba(255,255,255,.85) 50%, rgba(255,255,255,0) 56%, transparent 68%);
+  background-size: 260% 260%;
+  background-position: calc(50% - var(--px) * 70%) calc(50% - var(--py) * 70%);
+  mix-blend-mode: screen; opacity: .95;
+}
+.mat-crystal .fx-2 {
+  background:
+    var(--sparkle) calc(var(--lx) * .9 + 5%) calc(var(--ly) * .8 + 10%) / 26% auto no-repeat,
+    radial-gradient(circle at 28% 24%, #fff 0 1.6px, transparent 3.5px),
+    radial-gradient(circle at 72% 62%, #fff 0 1.2px, transparent 3px),
+    radial-gradient(circle at 44% 78%, #fff 0 1.3px, transparent 3px),
+    radial-gradient(circle at 80% 22%, #fff 0 1px, transparent 2.4px);
+  mix-blend-mode: screen;
+  animation: twinkle 1.7s ease-in-out infinite; animation-delay: calc(var(--seed, 0) * -1.7s);
+}
+@keyframes twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+
+/* -- glitter: dense flakes that shift against each other with the light -- */
+.mat-glitter img { filter: contrast(1.04) saturate(1.15); }
+.mat-glitter .fx-1 {
+  background: var(--glitter) 0 0 / 110px 110px;
+  background-position: calc(var(--px) * 46px) calc(var(--py) * 34px);
+  mix-blend-mode: screen; opacity: .9;
+}
+.mat-glitter .fx-2 {
+  background: var(--glitter2) 0 0 / 74px 74px;
+  background-position: calc(var(--px) * -70px) calc(var(--py) * -52px);
+  mix-blend-mode: color-dodge; opacity: .75;
+  animation: glint .8s steps(2) infinite; animation-delay: calc(var(--seed, 0) * -.8s);
+}
+@keyframes glint { 0%, 100% { opacity: .75; } 50% { opacity: .45; } }
+
+/* -- holo: rainbow foil, hue sweeps with the viewing angle -- */
+.mat-holo img { filter: contrast(1.05) brightness(.96) saturate(.9); }
+.mat-holo .fx-1 {
+  background: linear-gradient(calc(120deg + var(--px) * 110deg),
+    #ff0080, #ffcf00, #35ff9e, #00c8ff, #8a5cff, #ff0080, #ffcf00);
+  background-size: 320% 320%;
+  background-position: calc(50% + var(--px) * 50%) calc(50% + var(--py) * 50%);
+  mix-blend-mode: color-dodge; opacity: .6; filter: saturate(1.5);
+}
+.mat-holo .fx-2 {
+  background: repeating-linear-gradient(calc(40deg + var(--px) * 25deg),
+    rgba(255,255,255,.35) 0 1px, transparent 1px 4px);
+  mix-blend-mode: overlay; opacity: .7;
+}
+
+/* -- foil: gold-stamped print with a metallic rim -- */
+.mat-foil img { filter: sepia(.45) saturate(1.5) contrast(1.15) brightness(1.02); }
+.mat-foil .st-body {
+  filter: drop-shadow(1.3px 0 0 #c9a227) drop-shadow(-1.3px 0 0 #c9a227) drop-shadow(0 1.3px 0 #e2c24a) drop-shadow(0 -1.3px 0 #a37f12)
+          drop-shadow(0 1px 1px rgba(0,0,0,.3)) drop-shadow(0 3px 3px rgba(0,0,0,.15));
+}
+.mat-foil .fx-1 {
+  background: linear-gradient(calc(100deg + var(--px) * 45deg),
+    rgba(110,70,0,.55) 0%, rgba(255,235,150,0) 30%, rgba(255,252,220,.95) 50%, rgba(255,235,150,0) 70%, rgba(110,70,0,.55) 100%);
+  background-size: 240% 240%; background-position: var(--lx) var(--ly);
+  mix-blend-mode: overlay; opacity: .95;
+}
+.mat-foil .fx-2 {
+  background: repeating-linear-gradient(calc(-30deg + var(--px) * 20deg), rgba(255,255,255,.18) 0 2px, transparent 2px 6px);
+  mix-blend-mode: soft-light;
+}
+
+/* -- puffy: fat vinyl bubble sticker, soft inner highlight + thick white rim -- */
+.mat-puffy .st-body {
+  filter: drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)
+          drop-shadow(0 3px 2px rgba(0,0,0,.22)) drop-shadow(0 8px 10px rgba(0,0,0,.2));
+}
+.mat-puffy .fx-1 {
+  background: radial-gradient(ellipse 55% 45% at calc(34% + var(--px) * 14%) calc(26% + var(--py) * 14%),
+    rgba(255,255,255,.95), rgba(255,255,255,.35) 40%, rgba(255,255,255,0) 72%);
+  mix-blend-mode: screen; opacity: .9;
+}
+.mat-puffy .fx-2 {
+  background: radial-gradient(ellipse 80% 80% at calc(50% - var(--px) * 10%) calc(50% - var(--py) * 10%),
+    rgba(0,0,0,0) 55%, rgba(0,0,0,.35) 100%);
+  mix-blend-mode: multiply;
+}
+.mat-puffy.stick .st-body { animation-name: layDownPuffy; animation-duration: .7s; }
+@keyframes layDownPuffy {
+  0%   { transform: perspective(700px) rotateX(-14deg) scale(1.06); }
+  40%  { transform: perspective(700px) rotateX(2deg) scale(.96, .93); }
+  65%  { transform: perspective(700px) rotateX(-1deg) scale(1.02, 1.04); }
+  85%  { transform: scale(.995, .99); }
+  100% { transform: none; }
+}
+
+/* -- felt: fuzzy flock, soft edge + fibre noise -- */
+.mat-felt img { filter: blur(.3px) contrast(.96) saturate(1.3) brightness(1.04); }
+.mat-felt .st-body::before {
+  content: ""; position: absolute; inset: -2px; z-index: -1;
+  background: var(--img) center / 100% 100% no-repeat; filter: blur(2.2px); opacity: .9;
+}
+.mat-felt .st-body { filter: drop-shadow(0 1px 1px rgba(0,0,0,.2)) drop-shadow(0 3px 3px rgba(0,0,0,.15)); }
+.mat-felt .fx-1 { background: var(--noise) 0 0 / 90px 90px; mix-blend-mode: multiply; opacity: .2; }
+.mat-felt .fx-2 {
+  background: var(--noise) 0 0 / 46px 46px;
+  background-position: calc(var(--px) * 6px) calc(var(--py) * 6px);
+  mix-blend-mode: soft-light; opacity: .6;
+}
+
+/* -- paper: matte die-cut with the classic white border -- */
+.mat-paper .st-body {
+  filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)
+          drop-shadow(0 1px 1px rgba(0,0,0,.28)) drop-shadow(0 3px 3px rgba(0,0,0,.14));
+}
+.mat-paper .fx-1 {
+  background: linear-gradient(calc(115deg + var(--px) * 30deg), transparent 40%, rgba(255,255,255,.4) 50%, transparent 60%);
+  background-size: 240% 240%; background-position: calc(50% - var(--px) * 60%) calc(50% - var(--py) * 60%);
+  mix-blend-mode: screen; opacity: .7;
+}
+.mat-paper .fx-2 { background: var(--noise) 0 0 / 120px 120px; mix-blend-mode: multiply; opacity: .12; }
+
+/* -- vinyl: glossy, wet-look highlight that follows the light -- */
+.mat-vinyl .st-body {
+  filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)
+          drop-shadow(0 1px 1px rgba(0,0,0,.3)) drop-shadow(0 4px 4px rgba(0,0,0,.16));
+}
+.mat-vinyl .fx-1 {
+  background: radial-gradient(ellipse 42% 26% at var(--lx) var(--ly), rgba(255,255,255,.95), rgba(255,255,255,.2) 55%, rgba(255,255,255,0) 75%);
+  mix-blend-mode: screen; opacity: .9;
+}
+.mat-vinyl .fx-2 {
+  background: linear-gradient(calc(120deg + var(--px) * 30deg), transparent 42%, rgba(255,255,255,.55) 50%, transparent 58%);
+  background-size: 260% 260%; background-position: calc(50% - var(--px) * 70%) calc(50% - var(--py) * 70%);
+  mix-blend-mode: screen; opacity: .8;
+}
+
+/* state shadows must win over material rims */
+.sticker.peeling .st-body, .sticker.dragging .st-body, .sticker.lifted .st-body { filter: drop-shadow(0 6px 4px rgba(0,0,0,.2)) drop-shadow(0 22px 22px rgba(0,0,0,.32)) !important; }
+.sticker.taken .st-body { filter: grayscale(1) opacity(.22) blur(.3px) !important; }
+.sticker.peeloff .st-body { filter: none !important; }
+
+/* ---------- context menu ---------- */
+.ctx-menu {
+  position: fixed; z-index: 1000; min-width: 150px; padding: 4px;
+  background: #fff; border: 1px solid #000; border-radius: 4px; box-shadow: 2px 2px 0 #000;
+  font-size: 11px;
+}
+.ctx-menu button {
+  display: block; width: 100%; text-align: left; font: inherit; padding: 5px 8px; border: 0; background: none; cursor: pointer; border-radius: 3px;
+}
+.ctx-menu button:hover { background: #2b6fd0; color: #fff; }
+.ctx-menu button.on::before { content: "✓ "; }
+.ctx-menu hr { border: 0; border-top: 1px solid #ccc; margin: 4px 0; }
+
+.drop-hint {
+  position: fixed; inset: 0; z-index: 950; display: grid; place-items: center; pointer-events: none;
+  background: rgba(79,155,240,.18); border: 4px dashed #2b6fd0; font: 700 22px var(--ui-font); color: #0a1a33;
+}
+
+/* ---------- small screens ---------- */
+@media (max-width: 880px) {
+  .desk { grid-template-columns: 1fr; padding: 8px; gap: 10px; }
+  .tray-window { position: static; max-height: none; order: 2; }
+  .sheet-paper { max-height: 42vh; }
+  .canvas-window { order: 1; min-height: 56vh; }
+  .canvas { min-height: 50vh; }
+  .logo-main { font-size: 26px; }
+  .statusbar .hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mat-crystal .fx-2, .mat-glitter .fx-2 { animation: none; }
+}
+
+/* ---------- imported sheet tabs ---------- */
+.tab.imported { background: #e8def8; }
+.tab.imported.active { background: #fff; }
+.tab-x { margin-left: 6px; padding: 0 3px; border-radius: 3px; color: #8d1f1f; font-weight: 900; }
+.tab-x:hover { background: #8d1f1f; color: #fff; }
+
+/* ---------- sticker cutter ---------- */
+.modal { position: fixed; inset: 0; z-index: 1500; display: grid; place-items: center; background: rgba(40, 36, 30, .45); padding: 16px; }
+.cut-window { width: min(980px, 100%); max-height: calc(100vh - 32px); }
+.cut-body { display: grid; grid-template-columns: 1fr 250px; min-height: 0; flex: 1; }
+.cut-stage { position: relative; background: #2a2a2e; display: grid; place-items: center; padding: 10px; min-height: 0; overflow: auto; }
+.cut-canvas { max-width: 100%; max-height: calc(100vh - 110px); image-rendering: auto; cursor: pointer; box-shadow: 0 0 0 1px #000, 0 6px 18px rgba(0,0,0,.5); }
+.cut-busy { position: absolute; top: 12px; left: 12px; background: #000; color: #9effa0; font: 11px/1 Monaco, Menlo, monospace; padding: 5px 8px; border-radius: 3px; }
+.cut-side { display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #fff; border-left: 1px solid #8a8a8a; overflow: auto; }
+.cut-row { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; }
+.cut-row.col { flex-direction: column; align-items: stretch; gap: 3px; }
+.cut-row input[type=text], .cut-name { flex: 1; min-width: 0; font: 12px var(--ui-font); padding: 3px 5px; border: 1px solid #777; border-radius: 4px; }
+.cut-hint { font-weight: 400; color: #777; font-size: 10px; }
+.cut-pick[aria-pressed="true"] { filter: hue-rotate(160deg) brightness(1.05); }
+.cut-info { font-size: 11px; line-height: 1.5; margin: 0; color: #333; }
+.cut-actions { margin-top: auto; display: flex; gap: 8px; justify-content: flex-end; }
+.cut-ok:disabled { opacity: .45; pointer-events: none; }
+.toast { position: fixed; left: 50%; bottom: 24px; z-index: 1600; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  background: #111; color: #9effa0; font: 12px/1.4 Monaco, Menlo, monospace; padding: 8px 14px; border-radius: 4px; border: 1px solid #444;
+  transition: opacity .2s, transform .2s; max-width: calc(100vw - 32px); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 720px) {
+  .cut-body { grid-template-columns: 1fr; }
+  .cut-side { border-left: 0; border-top: 1px solid #8a8a8a; }
+  .cut-canvas { max-height: 50vh; }
+}
+
+/* ---------- drop pictures in ---------- */
+.dropzone {
+  display: block; margin: 0 8px 8px; padding: 10px 12px; border: 2px dashed #9a8fc0; border-radius: 6px;
+  background: repeating-linear-gradient(-45deg, #faf8ff 0 8px, #f2eefc 8px 16px);
+  color: #3b2b6b; font-size: 11px; line-height: 1.45; cursor: pointer; text-align: center;
+  transition: background .15s, border-color .15s, transform .15s;
+}
+.dropzone b { display: block; font-size: 13px; margin-bottom: 2px; }
+.dropzone small { display: block; color: #6b5fa0; font-size: 10px; }
+.dropzone:hover { border-color: #d1227a; }
+.dropzone.hot { border-color: #d1227a; background: #ffe6f3; transform: scale(1.02); }
+.drop-hint { flex-direction: column; }
+.drop-hint:not([hidden]) { display: grid; }
+.drop-hint.on-canvas { background: transparent; border-color: transparent; }
+.drop-hint.on-canvas #drop-hint-text { display: none; }
+.drop-hint #drop-hint-text { background: #fff; padding: 10px 18px; border: 2px solid #2b6fd0; border-radius: 8px; box-shadow: 3px 3px 0 #0a1a33; }
+.canvas.drop-here { outline: 4px dashed #d1227a; outline-offset: -8px; }
+.canvas.drop-here::after {
+  content: attr(data-drop); position: absolute; left: 50%; top: 14px; transform: translateX(-50%); z-index: 9999;
+  background: #d1227a; color: #fff; font: 700 12px var(--ui-font); padding: 6px 12px; border-radius: 999px; pointer-events: none;
+}
+
+/* ---------- trash zone while dragging a sticker ---------- */
+.trash {
+  position: absolute; left: 12px; bottom: 12px; z-index: 9998; padding: 12px 16px; border-radius: 10px;
+  background: rgba(255,255,255,.88); border: 2px dashed #8d1f1f; color: #8d1f1f; font: 700 12px var(--ui-font);
+  pointer-events: none; transition: transform .15s, background .15s; box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.trash.hot { transform: scale(1.12); background: #8d1f1f; color: #fff; border-style: solid; }
+.trash[hidden] { display: none !important; }
+
+/* ---------- selection handles ---------- */
+.sticker .handle {
+  display: none; position: absolute; z-index: 5; width: 22px; height: 22px; border-radius: 50%;
+  align-items: center; justify-content: center; padding: 0; line-height: 1;
+  font: 700 13px var(--ui-font); border: 1px solid #000; box-shadow: 1px 1px 0 #000; cursor: pointer;
+  transform: scale(calc(1 / var(--s, 1)));
+}
+.sticker.selected .handle { display: flex; }
+#float-layer .sticker .handle, .tray .sticker .handle, .sticker.lifted .handle, .sticker.peeloff .handle { display: none; }
+.h-del { right: -11px; top: -11px; background: #ff6b6b; color: #fff; }
+.h-del:hover { background: #d1227a; }
+.h-rot { right: -11px; bottom: -11px; background: #fff; color: #0a1a33; cursor: grab; touch-action: none; }
+.h-rot:active { cursor: grabbing; }
+
+/* ---------- toast with an Undo button ---------- */
+.toast.show { pointer-events: auto; }
+.toast-btn { margin-left: 12px; font: 700 11px var(--ui-font); color: #111; background: #9effa0; border: 0; border-radius: 3px; padding: 3px 9px; cursor: pointer; }
+.toast-btn:hover { background: #fff; }

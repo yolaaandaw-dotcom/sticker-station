@@ -1,0 +1,116 @@
+[
+ {
+  "name": "cats_02",
+  "file": "cats_02.png",
+  "w": 204,
+  "h": 173
+ },
+ {
+  "name": "cats_01",
+  "file": "cats_01.png",
+  "w": 272,
+  "h": 208
+ },
+ {
+  "name": "cats_04",
+  "file": "cats_04.png",
+  "w": 136,
+  "h": 82
+ },
+ {
+  "name": "cats_03",
+  "file": "cats_03.png",
+  "w": 102,
+  "h": 81
+ },
+ {
+  "name": "cats_06",
+  "file": "cats_06.png",
+  "w": 150,
+  "h": 100
+ },
+ {
+  "name": "cats_05",
+  "file": "cats_05.png",
+  "w": 206,
+  "h": 164
+ },
+ {
+  "name": "cats_08",
+  "file": "cats_08.png",
+  "w": 174,
+  "h": 138
+ },
+ {
+  "name": "cats_07",
+  "file": "cats_07.png",
+  "w": 144,
+  "h": 156
+ },
+ {
+  "name": "cats_09",
+  "file": "cats_09.png",
+  "w": 233,
+  "h": 187
+ },
+ {
+  "name": "cats_10",
+  "file": "cats_10.png",
+  "w": 289,
+  "h": 222
+ },
+ {
+  "name": "cats_11",
+  "file": "cats_11.png",
+  "w": 106,
+  "h": 80
+ },
+ {
+  "name": "cats_12",
+  "file": "cats_12.png",
+  "w": 140,
+  "h": 156
+ },
+ {
+  "name": "cats_13",
+  "file": "cats_13.png",
+  "w": 156,
+  "h": 128
+ },
+ {
+  "name": "cats_14",
+  "file": "cats_14.png",
+  "w": 206,
+  "h": 251
+ },
+ {
+  "name": "cats_15",
+  "file": "cats_15.png",
+  "w": 293,
+  "h": 190
+ },
+ {
+  "name": "cats_16",
+  "file": "cats_16.png",
+  "w": 131,
+  "h": 126
+ },
+ {
+  "name": "cats_17",
+  "file": "cats_17.png",
+  "w": 174,
+  "h": 134
+ },
+ {
+  "name": "cats_19",
+  "file": "cats_19.png",
+  "w": 126,
+  "h": 129
+ },
+ {
+  "name": "cats_18",
+  "file": "cats_18.png",
+  "w": 194,
+  "h": 137
+ }
+]

@@ -1,0 +1,104 @@
+[
+ {
+  "name": "holy_02",
+  "file": "holy_02.png",
+  "w": 87,
+  "h": 157
+ },
+ {
+  "name": "holy_04",
+  "file": "holy_04.png",
+  "w": 52,
+  "h": 123
+ },
+ {
+  "name": "holy_03",
+  "file": "holy_03.png",
+  "w": 100,
+  "h": 74
+ },
+ {
+  "name": "holy_06",
+  "file": "holy_06.png",
+  "w": 66,
+  "h": 75
+ },
+ {
+  "name": "holy_01",
+  "file": "holy_01.png",
+  "w": 119,
+  "h": 328
+ },
+ {
+  "name": "holy_05",
+  "file": "holy_05.png",
+  "w": 139,
+  "h": 170
+ },
+ {
+  "name": "holy_08",
+  "file": "holy_08.png",
+  "w": 73,
+  "h": 73
+ },
+ {
+  "name": "holy_07",
+  "file": "holy_07.png",
+  "w": 148,
+  "h": 187
+ },
+ {
+  "name": "holy_09",
+  "file": "holy_09.png",
+  "w": 87,
+  "h": 70
+ },
+ {
+  "name": "holy_12",
+  "file": "holy_12.png",
+  "w": 76,
+  "h": 77
+ },
+ {
+  "name": "holy_13",
+  "file": "holy_13.png",
+  "w": 64,
+  "h": 68
+ },
+ {
+  "name": "holy_11",
+  "file": "holy_11.png",
+  "w": 192,
+  "h": 105
+ },
+ {
+  "name": "holy_14",
+  "file": "holy_14.png",
+  "w": 131,
+  "h": 98
+ },
+ {
+  "name": "holy_10",
+  "file": "holy_10.png",
+  "w": 213,
+  "h": 274
+ },
+ {
+  "name": "holy_15",
+  "file": "holy_15.png",
+  "w": 96,
+  "h": 103
+ },
+ {
+  "name": "holy_17",
+  "file": "holy_17.png",
+  "w": 101,
+  "h": 147
+ },
+ {
+  "name": "holy_16",
+  "file": "holy_16.png",
+  "w": 99,
+  "h": 204
+ }
+]

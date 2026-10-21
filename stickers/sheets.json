@@ -1,0 +1,44 @@
+{
+ "gems": {
+  "label": {
+   "en": "Gems",
+   "zh": "宝石"
+  },
+  "material": "crystal"
+ },
+ "hellokitty": {
+  "label": {
+   "en": "Kitty glitter",
+   "zh": "Kitty 闪粉"
+  },
+  "material": "glitter"
+ },
+ "zoo": {
+  "label": {
+   "en": "Zoo",
+   "zh": "动物园"
+  },
+  "material": "foil"
+ },
+ "feltcats": {
+  "label": {
+   "en": "Felt cats",
+   "zh": "毛毡猫"
+  },
+  "material": "felt"
+ },
+ "holy": {
+  "label": {
+   "en": "Holy",
+   "zh": "圣像"
+  },
+  "material": "puffy"
+ },
+ "cats": {
+  "label": {
+   "en": "Cats",
+   "zh": "猫咪"
+  },
+  "material": "paper"
+ }
+}

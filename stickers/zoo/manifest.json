@@ -1,0 +1,38 @@
+[
+ {
+  "name": "zoo_02",
+  "file": "zoo_02.png",
+  "w": 607,
+  "h": 723
+ },
+ {
+  "name": "zoo_01",
+  "file": "zoo_01.png",
+  "w": 450,
+  "h": 890
+ },
+ {
+  "name": "zoo_03",
+  "file": "zoo_03.png",
+  "w": 773,
+  "h": 391
+ },
+ {
+  "name": "zoo_04",
+  "file": "zoo_04.png",
+  "w": 592,
+  "h": 706
+ },
+ {
+  "name": "zoo_05",
+  "file": "zoo_05.png",
+  "w": 421,
+  "h": 608
+ },
+ {
+  "name": "zoo_06",
+  "file": "zoo_06.png",
+  "w": 1003,
+  "h": 531
+ }
+]

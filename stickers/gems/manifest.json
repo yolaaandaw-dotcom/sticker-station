@@ -1,0 +1,206 @@
+[
+ {
+  "name": "gems_04",
+  "file": "gems_04.png",
+  "w": 174,
+  "h": 172
+ },
+ {
+  "name": "gems_02",
+  "file": "gems_02.png",
+  "w": 212,
+  "h": 211
+ },
+ {
+  "name": "gems_03",
+  "file": "gems_03.png",
+  "w": 216,
+  "h": 209
+ },
+ {
+  "name": "gems_01",
+  "file": "gems_01.png",
+  "w": 213,
+  "h": 202
+ },
+ {
+  "name": "gems_05",
+  "file": "gems_05.png",
+  "w": 192,
+  "h": 196
+ },
+ {
+  "name": "gems_06",
+  "file": "gems_06.png",
+  "w": 198,
+  "h": 188
+ },
+ {
+  "name": "gems_09",
+  "file": "gems_09.png",
+  "w": 206,
+  "h": 185
+ },
+ {
+  "name": "gems_08",
+  "file": "gems_08.png",
+  "w": 234,
+  "h": 166
+ },
+ {
+  "name": "gems_10",
+  "file": "gems_10.png",
+  "w": 214,
+  "h": 231
+ },
+ {
+  "name": "gems_07",
+  "file": "gems_07.png",
+  "w": 202,
+  "h": 201
+ },
+ {
+  "name": "gems_11",
+  "file": "gems_11.png",
+  "w": 205,
+  "h": 197
+ },
+ {
+  "name": "gems_13",
+  "file": "gems_13.png",
+  "w": 185,
+  "h": 192
+ },
+ {
+  "name": "gems_12",
+  "file": "gems_12.png",
+  "w": 238,
+  "h": 199
+ },
+ {
+  "name": "gems_14",
+  "file": "gems_14.png",
+  "w": 200,
+  "h": 200
+ },
+ {
+  "name": "gems_16",
+  "file": "gems_16.png",
+  "w": 231,
+  "h": 220
+ },
+ {
+  "name": "gems_17",
+  "file": "gems_17.png",
+  "w": 138,
+  "h": 139
+ },
+ {
+  "name": "gems_18",
+  "file": "gems_18.png",
+  "w": 196,
+  "h": 186
+ },
+ {
+  "name": "gems_15",
+  "file": "gems_15.png",
+  "w": 242,
+  "h": 241
+ },
+ {
+  "name": "gems_21",
+  "file": "gems_21.png",
+  "w": 239,
+  "h": 239
+ },
+ {
+  "name": "gems_20",
+  "file": "gems_20.png",
+  "w": 181,
+  "h": 180
+ },
+ {
+  "name": "gems_22",
+  "file": "gems_22.png",
+  "w": 129,
+  "h": 196
+ },
+ {
+  "name": "gems_19",
+  "file": "gems_19.png",
+  "w": 263,
+  "h": 302
+ },
+ {
+  "name": "gems_24",
+  "file": "gems_24.png",
+  "w": 154,
+  "h": 199
+ },
+ {
+  "name": "gems_23",
+  "file": "gems_23.png",
+  "w": 228,
+  "h": 199
+ },
+ {
+  "name": "gems_25",
+  "file": "gems_25.png",
+  "w": 132,
+  "h": 276
+ },
+ {
+  "name": "gems_27",
+  "file": "gems_27.png",
+  "w": 229,
+  "h": 237
+ },
+ {
+  "name": "gems_29",
+  "file": "gems_29.png",
+  "w": 337,
+  "h": 182
+ },
+ {
+  "name": "gems_28",
+  "file": "gems_28.png",
+  "w": 227,
+  "h": 233
+ },
+ {
+  "name": "gems_26",
+  "file": "gems_26.png",
+  "w": 185,
+  "h": 249
+ },
+ {
+  "name": "gems_30",
+  "file": "gems_30.png",
+  "w": 160,
+  "h": 232
+ },
+ {
+  "name": "gems_33",
+  "file": "gems_33.png",
+  "w": 190,
+  "h": 198
+ },
+ {
+  "name": "gems_32",
+  "file": "gems_32.png",
+  "w": 150,
+  "h": 228
+ },
+ {
+  "name": "gems_31",
+  "file": "gems_31.png",
+  "w": 250,
+  "h": 239
+ },
+ {
+  "name": "gems_34",
+  "file": "gems_34.png",
+  "w": 216,
+  "h": 204
+ }
+]

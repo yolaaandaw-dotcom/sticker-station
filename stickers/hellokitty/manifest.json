@@ -1,0 +1,158 @@
+[
+ {
+  "name": "hellokitty_01",
+  "file": "hellokitty_01.png",
+  "w": 224,
+  "h": 242
+ },
+ {
+  "name": "hellokitty_02",
+  "file": "hellokitty_02.png",
+  "w": 234,
+  "h": 206
+ },
+ {
+  "name": "hellokitty_03",
+  "file": "hellokitty_03.png",
+  "w": 193,
+  "h": 182
+ },
+ {
+  "name": "hellokitty_05",
+  "file": "hellokitty_05.png",
+  "w": 115,
+  "h": 76
+ },
+ {
+  "name": "hellokitty_06",
+  "file": "hellokitty_06.png",
+  "w": 139,
+  "h": 184
+ },
+ {
+  "name": "hellokitty_07",
+  "file": "hellokitty_07.png",
+  "w": 188,
+  "h": 142
+ },
+ {
+  "name": "hellokitty_04",
+  "file": "hellokitty_04.png",
+  "w": 297,
+  "h": 204
+ },
+ {
+  "name": "hellokitty_08",
+  "file": "hellokitty_08.png",
+  "w": 120,
+  "h": 145
+ },
+ {
+  "name": "hellokitty_11",
+  "file": "hellokitty_11.png",
+  "w": 219,
+  "h": 183
+ },
+ {
+  "name": "hellokitty_10",
+  "file": "hellokitty_10.png",
+  "w": 134,
+  "h": 124
+ },
+ {
+  "name": "hellokitty_12",
+  "file": "hellokitty_12.png",
+  "w": 72,
+  "h": 67
+ },
+ {
+  "name": "hellokitty_09",
+  "file": "hellokitty_09.png",
+  "w": 236,
+  "h": 219
+ },
+ {
+  "name": "hellokitty_15",
+  "file": "hellokitty_15.png",
+  "w": 243,
+  "h": 177
+ },
+ {
+  "name": "hellokitty_13",
+  "file": "hellokitty_13.png",
+  "w": 218,
+  "h": 237
+ },
+ {
+  "name": "hellokitty_14",
+  "file": "hellokitty_14.png",
+  "w": 75,
+  "h": 70
+ },
+ {
+  "name": "hellokitty_17",
+  "file": "hellokitty_17.png",
+  "w": 108,
+  "h": 93
+ },
+ {
+  "name": "hellokitty_16",
+  "file": "hellokitty_16.png",
+  "w": 191,
+  "h": 183
+ },
+ {
+  "name": "hellokitty_19",
+  "file": "hellokitty_19.png",
+  "w": 117,
+  "h": 79
+ },
+ {
+  "name": "hellokitty_18",
+  "file": "hellokitty_18.png",
+  "w": 173,
+  "h": 131
+ },
+ {
+  "name": "hellokitty_20",
+  "file": "hellokitty_20.png",
+  "w": 210,
+  "h": 253
+ },
+ {
+  "name": "hellokitty_21",
+  "file": "hellokitty_21.png",
+  "w": 190,
+  "h": 179
+ },
+ {
+  "name": "hellokitty_22",
+  "file": "hellokitty_22.png",
+  "w": 112,
+  "h": 148
+ },
+ {
+  "name": "hellokitty_23",
+  "file": "hellokitty_23.png",
+  "w": 154,
+  "h": 153
+ },
+ {
+  "name": "hellokitty_24",
+  "file": "hellokitty_24.png",
+  "w": 297,
+  "h": 169
+ },
+ {
+  "name": "hellokitty_26",
+  "file": "hellokitty_26.png",
+  "w": 191,
+  "h": 115
+ },
+ {
+  "name": "hellokitty_25",
+  "file": "hellokitty_25.png",
+  "w": 199,
+  "h": 140
+ }
+]
