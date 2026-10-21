@@ -1,5 +1,7 @@
 # Sticker Station ✦ 贴纸站
 
+**Live site 在线网址：https://yolaaandaw-dotcom.github.io/sticker-station/**
+
 drawing++ 作业：一个复古风的贴纸画布。从网上扒来的贴纸纸样 → 切成单张透明 PNG →
 在网页里「撕下来 → 拖 → 贴上去」，每种贴纸有自己的材质（宝石切面 / 闪粉 / 镭射 /
 烫金 / 泡泡立体 / 毛毡 / 亚光纸 / 亮面胶），会跟着鼠标（手机上跟着陀螺仪）的光反射。
