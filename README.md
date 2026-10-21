@@ -31,6 +31,42 @@ python3 -m http.server 8788 --directory /Users/yaowang/Desktop/drawing-plus-plus
 导入的贴纸存在这个浏览器的 IndexedDB 里，刷新还在；换浏览器 / 清缓存会没有。
 标签上的 × 删除这张纸（画布上用到它的贴纸也会撕掉）。
 
+## 贴纸库：从 Pinterest 收集 → 自动切 → 按口味筛 → 发布
+
+全部在你自己的 Mac 上跑，不用 Claude、不花 token。图片**不存本地**：贴纸纸留在 Pinterest（或 Openverse），
+每次只下载到内存里切完就扔，本地只留一个很小的索引（每张贴纸几 KB 的轮廓 + 指纹）。
+
+**日常用法**：双击项目里的 `Sticker Library.command`。它会：
+1. 读你的看板 `pinterest.com/yolaaadaw/sticker`（公开 RSS，Pinterest 官方提供，最多最近 25 个 pin），把新 pin 切好
+2. 打开评审页 http://localhost:8790
+
+**评审页**：一次看一整张贴纸纸，切出来的贴纸被点亮。
+- → 保留整张，← 不要，空格稍后，Z 撤销；点某张贴纸可以只把它去掉（可选）
+- 判断 8 张以后口味模型开始学，之后每 5 张重新学一次；「Likely keep」按它猜你喜欢的程度排
+- 判断 20 张、准确率 75% 以上后可以点「✓ Let it decide the clear ones」让它自动处理有把握的（标 auto，可改）
+- 「🔍 Find more like these」：去 Openverse（Flickr / Wikimedia 上开放授权的照片）找像你保留过的贴纸纸，
+  按你的口味打分，只把像的加进「Found for you」。不用"禁止演绎（ND）"授权的图，因为切贴纸算修改。
+  Pinterest 本身不允许程序去爬别人的图，所以 Pinterest 这边的"更多相似"请用 Pinterest 自己的 **More ideas**：
+  看到像的就顺手存进看板（可以另建一个 inbox 看板，在 `library/config.json` 的 `boards` 里加上），下次同步时模型帮你筛。
+- 「⤴ Publish to the site」：把保留的贴纸纸重新切一遍，存成小 WebP 放进网站并推到 GitHub，网站一两分钟后更新。
+  贴纸按主题自动分成几张贴纸纸，每张贴纸带自己的材质；`credits.html`（网站右下角 sources）列出每张的来源和授权。
+
+**命令行**（可选）：
+
+```bash
+.venv-lib/bin/python -I tools/stickerlib.py update      # 同步看板 + 切
+.venv-lib/bin/python -I tools/stickerlib.py review      # 评审页
+.venv-lib/bin/python -I tools/stickerlib.py discover    # 找相似的
+.venv-lib/bin/python -I tools/stickerlib.py publish --push
+.venv-lib/bin/python -I tools/stickerlib.py status
+```
+
+**占用空间**：模型 160 MB + Python 环境 120 MB（一次性），索引约 6 KB / 贴纸（3000 张约 18 MB）。
+`library/` 和 `.venv-lib/` 不进 git。设置在 `library/config.json`（看板、自动判断阈值、发布尺寸、搜索词 `discover_queries`）。
+
+**文件**：`tools/autocut.py` 自动切（和网页里的切贴纸同一套算法），`tools/taste.py` 指纹 / 自动标签 / 口味模型（CLIP，本地 ONNX），
+`tools/stickerlib.py` 整个流程，`tools/review.html` 评审页。
+
 ## 把贴纸纸永久加进网站文件（Python，可选）
 
 想让贴纸纸跟着网站一起发布（别人打开也有），用下面的脚本切进 `stickers/`：

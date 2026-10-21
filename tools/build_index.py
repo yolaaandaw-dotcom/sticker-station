@@ -19,7 +19,8 @@ for mf in sorted(glob.glob(os.path.join(root, "*", "manifest.json"))):
         "id": sid,
         "label": meta.get("label", sid),
         "material": meta.get("material", "paper"),
-        "items": [{"file": f"stickers/{sid}/{it['file']}", "w": it["w"], "h": it["h"]} for it in items],
+        "items": [{"file": f"stickers/{sid}/{it['file']}", "w": it["w"], "h": it["h"],
+                   **({"mat": it["mat"]} if it.get("mat") else {}), **({"src": it["src"]} if it.get("src") else {})} for it in items],
     })
 # keep the order given in sheets.json first
 order = list(cfg.keys())

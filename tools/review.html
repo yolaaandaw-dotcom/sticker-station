@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sticker review</title>
+<style>
+:root { --ink: #111; --win: #ececea; --desk: #d2d0cc; --pink: #d1227a; --ok: #2f9e44; --no: #c92a2a; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 12px/1.45 Verdana, Geneva, "PingFang SC", sans-serif; color: var(--ink); background: var(--desk); min-height: 100vh; }
+header { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 12px 16px 8px; }
+h1 { margin: 0; font: italic 700 26px/1 "Times New Roman", serif; text-shadow: 1px 1px 0 #fff, 2px 2px 0 #999; }
+h1 b { color: var(--pink); }
+.stats { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; }
+.stats b { font-size: 13px; }
+.pill { font: 700 11px/1 Verdana, sans-serif; padding: 7px 12px; border-radius: 999px; border: 1px solid #1d4a90; cursor: pointer; color: #0a1a33;
+  background: linear-gradient(#f4faff 0%, #cfe6ff 45%, #4f9bf0 50%, #8fc3ff 100%); box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(0,0,0,.35); }
+.pill:disabled { opacity: .4; filter: grayscale(1); cursor: default; }
+.pill.go { background: linear-gradient(#f2fff4 0%, #c9f2d0 45%, #51cf66 50%, #8ce99a 100%); border-color: #1b6b2a; }
+.tabs { display: flex; gap: 4px; padding: 0 16px; flex-wrap: wrap; }
+.tab { font: 700 11px/1 Verdana, sans-serif; padding: 7px 11px; border: 1px solid #777; border-bottom: 0; border-radius: 6px 6px 0 0; background: #d9d9d9; cursor: pointer; }
+.tab.on { background: var(--win); }
+main { margin: 0 16px 16px; background: var(--win); border: 1px solid #5c5c5c; border-radius: 0 6px 6px 6px; min-height: 70vh; }
+.one { display: grid; grid-template-columns: 1fr 280px; gap: 16px; padding: 16px; }
+.stage { position: relative; display: grid; place-items: center; min-height: 64vh; border-radius: 6px; background: #2a2a2e; border: 1px solid #555; overflow: hidden; transition: transform .16s, opacity .16s; }
+.stage.fly-keep { transform: translateX(50px) rotate(2deg); opacity: .3; }
+.stage.fly-skip { transform: translateX(-50px) rotate(-2deg); opacity: .3; }
+.sheet { position: relative; }
+.sheet canvas { display: block; max-width: 100%; max-height: 66vh; }
+.box { position: absolute; cursor: pointer; border-radius: 4px; }
+.box:hover { outline: 2px dashed #fff; }
+.box.x::after { content: "✕"; position: absolute; inset: 0; display: grid; place-items: center; color: #ff6b6b; font: 900 26px Verdana; text-shadow: 0 1px 3px #000; }
+.box.e { cursor: default; }
+.badge { position: absolute; top: 10px; left: 10px; z-index: 2; font: 700 11px Verdana; padding: 4px 8px; border-radius: 4px; background: #fff; border: 1px solid #999; }
+.badge.keep { background: var(--ok); color: #fff; border-color: var(--ok); }
+.badge.skip { background: var(--no); color: #fff; border-color: var(--no); }
+.keys { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+.key { padding: 10px 16px; border-radius: 6px; border: 1px solid #555; background: #fff; font: 700 12px Verdana; cursor: pointer; box-shadow: 0 2px 0 #555; }
+.key:active { transform: translateY(2px); box-shadow: none; }
+.key.k { background: #d3f9d8; } .key.s { background: #ffe3e3; }
+kbd { font: 700 10px Menlo, monospace; background: #222; color: #fff; border-radius: 3px; padding: 1px 5px; margin-right: 6px; }
+.side { display: flex; flex-direction: column; gap: 12px; }
+.card { background: #fff; border: 1px solid #aaa; border-radius: 6px; padding: 10px; }
+.card h3 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: #555; }
+.meter { height: 12px; border-radius: 6px; background: #eee; overflow: hidden; border: 1px solid #bbb; }
+.meter i { display: block; height: 100%; background: linear-gradient(90deg, #ff8787, #ffd43b, #69db7c); }
+select { font: 12px Verdana; padding: 3px; width: 100%; margin-top: 3px; }
+.row { display: flex; gap: 8px; align-items: center; }
+.muted { color: #666; font-size: 11px; }
+.grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px; }
+.cell { position: relative; width: 150px; height: 170px; display: grid; place-items: center; background: #2a2a2e; border: 1px solid #555; border-radius: 6px; cursor: pointer; overflow: hidden; }
+.cell img { max-width: 140px; max-height: 160px; }
+.cell .p { position: absolute; right: 4px; bottom: 3px; font: 700 10px Menlo; color: #fff; background: rgba(0,0,0,.6); padding: 1px 4px; border-radius: 3px; }
+.cell.keep { outline: 3px solid var(--ok); } .cell.skip { outline: 3px solid var(--no); }
+.cell.skip img { opacity: .4; }
+.cell .auto { position: absolute; left: 4px; top: 3px; font: 700 9px Menlo; color: #fff; background: rgba(0,0,0,.6); padding: 1px 4px; border-radius: 3px; }
+.empty { padding: 60px; text-align: center; color: #666; font-size: 14px; }
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: #111; color: #9effa0; font: 12px Menlo; padding: 8px 14px; border-radius: 4px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 9; }
+.toast.show { opacity: 1; }
+@media (max-width: 820px) { .one { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sticker<b>Review</b></h1>
+  <div class="stats" id="stats"></div>
+  <span style="flex:1"></span>
+  <button class="pill" id="btn-retrain" title="Re-learn your taste from every sheet you judged">↻ Re-learn</button>
+  <button class="pill" id="btn-discover" title="Search openly licensed photos for sheets like the ones you kept, and score them with your taste">🔍 Find more like these</button>
+  <button class="pill go" id="btn-apply">✓ Let it decide the clear ones</button>
+  <button class="pill" id="btn-publish" title="Cut the stickers of every kept sheet into the site and push it live">⤴ Publish to the site</button>
+</header>
+<div class="tabs" id="tabs"></div>
+<main id="main"></main>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+let S = null, tab = 'review', queue = [], pos = 0, undoStack = [];
+const T = { review: ['To judge', 'one'], likely: ['Likely keep', 'one'], discovered: ['Found for you', 'one'], kept: ['Kept', 'grid'], skipped: ['Skipped', 'grid'] };
+const $ = s => document.querySelector(s);
+const toast = (m, ms = 1800) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms); };
+const api = async (p, body) => (await fetch(p, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {})).json();
+const pct = p => p == null ? '' : Math.round(p * 100) + '%';
+
+// ---- pictures: the sheet loads from its source, outlines from the local masks ----
+const imgCache = new Map();
+const loadImg = src => imgCache.get(src) || (imgCache.set(src, new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; })), imgCache.get(src));
+const maskCache = new Map();
+async function maskCanvas(k) {
+  if (maskCache.has(k)) return maskCache.get(k);
+  const m = await loadImg('/lib/' + k);
+  const c = document.createElement('canvas'); c.width = m.width; c.height = m.height;
+  const g = c.getContext('2d'); g.drawImage(m, 0, 0);
+  const d = g.getImageData(0, 0, c.width, c.height);
+  for (let i = 0; i < d.data.length; i += 4) { d.data[i + 3] = d.data[i]; d.data[i] = d.data[i + 1] = d.data[i + 2] = 255; }
+  g.putImageData(d, 0, 0); maskCache.set(k, c); return c;
+}
+// the sheet, dimmed, with every cut sticker lit up: shows exactly what the cutter found
+async function sheetCanvas(sh, maxW, maxH) {
+  const img = await loadImg(sh.img);
+  const k = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight, 1.5);
+  const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+  const g = c.getContext('2d');
+  g.drawImage(img, 0, 0, c.width, c.height);
+  g.fillStyle = 'rgba(20,20,26,.62)'; g.fillRect(0, 0, c.width, c.height);
+  const w2c = c.width / sh.work[0], sx = img.naturalWidth / sh.work[0];
+  const tmp = document.createElement('canvas'); const t = tmp.getContext('2d');
+  for (const st of sh.st) {
+    if (st.x) continue;
+    const [x0, y0, x1, y1] = st.b, w = (x1 - x0) * w2c, h = (y1 - y0) * w2c;
+    if (w < 1 || h < 1) continue;
+    tmp.width = Math.ceil(w); tmp.height = Math.ceil(h);
+    t.globalCompositeOperation = 'source-over'; t.clearRect(0, 0, tmp.width, tmp.height);
+    t.drawImage(img, x0 * sx, y0 * sx, (x1 - x0) * sx, (y1 - y0) * sx, 0, 0, tmp.width, tmp.height);
+    try { t.globalCompositeOperation = 'destination-in'; t.drawImage(await maskCanvas(st.k), 0, 0, tmp.width, tmp.height); } catch (e) {}
+    g.globalAlpha = st.e ? .45 : 1; g.drawImage(tmp, x0 * w2c, y0 * w2c); g.globalAlpha = 1;
+  }
+  c._k = w2c;
+  return c;
+}
+
+function buildQueue() {
+  const L = S.sheets, trained = (S.model && S.model.n >= 8);
+  if (tab === 'review') {
+    queue = L.filter(s => s.d == null && !s.disc);
+    queue.sort(trained ? (a, b) => Math.abs((a.p ?? .5) - .5) - Math.abs((b.p ?? .5) - .5) : (a, b) => a.id.localeCompare(b.id));
+  } else if (tab === 'likely') queue = L.filter(s => s.d == null && s.p != null && !s.disc).sort((a, b) => b.p - a.p);
+  else if (tab === 'discovered') queue = L.filter(s => s.d == null && s.disc).sort((a, b) => (b.p ?? 0) - (a.p ?? 0));
+  else if (tab === 'kept') queue = L.filter(s => s.d === 'keep');
+  else queue = L.filter(s => s.d === 'skip');
+  pos = 0;
+}
+function stats() {
+  const L = S.sheets, c = f => L.filter(f).length, m = S.model || {};
+  $('#stats').innerHTML = `<span>sheets to judge <b>${c(s => s.d == null && !s.disc)}</b></span><span>kept <b>${c(s => s.d === 'keep')}</b></span>
+    <span>skipped <b>${c(s => s.d === 'skip')}</b></span><span>found for you <b>${c(s => s.d == null && s.disc)}</b></span>
+    <span>stickers for the site <b>${S.kept_stickers}</b></span>
+    <span>taste: ${m.n >= 8 ? `<b>${m.n}</b> sheets judged · accuracy <b>${m.acc == null ? '…' : pct(m.acc)}</b>` : `judge <b>${Math.max(0, 8 - (m.n || 0))}</b> more sheets to start learning`}</span>`;
+  const ok = m.n >= 20 && m.acc >= .75;
+  $('#btn-apply').disabled = !ok;
+  $('#btn-apply').title = ok ? 'Keep the sheets it is sure you like, skip the ones it is sure you don’t (marked auto; you can still change them)' : 'Unlocks after 20 sheets with at least 75% accuracy';
+  $('#tabs').innerHTML = Object.entries(T).map(([k, [l]]) => `<button class="tab ${k === tab ? 'on' : ''}" data-t="${k}">${l}</button>`).join('');
+}
+$('#tabs').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; tab = b.dataset.t; buildQueue(); stats(); show(); };
+
+async function show() {
+  const main = $('#main');
+  if (T[tab][1] === 'grid') return grid();
+  const sh = queue[pos];
+  if (!sh) {
+    main.innerHTML = `<div class="empty">${tab === 'discovered' ? 'Nothing found yet. Run <code>discover</code> to look for sheets like the ones you kept.' : 'All judged ✦ pin more sheets, then run <code>update</code>.'}</div>`; return;
+  }
+  const live = sh.st.filter(s => !s.e && !s.x).length, edge = sh.st.filter(s => s.e).length, out = sh.st.filter(s => s.x).length;
+  main.innerHTML = `<div class="one">
+    <div><div class="stage" id="stage"><span class="badge ${sh.d || ''}">${sh.d ? sh.d + (sh.a ? ' · auto' : '') : (queue.length - pos) + ' left'}</span><div class="sheet" id="sheet"></div></div>
+      <div class="keys">
+        <button class="key s" data-k="skip"><kbd>←</kbd>skip sheet</button>
+        <button class="key k" data-k="keep"><kbd>→</kbd>keep sheet</button>
+        <button class="key" data-k="later"><kbd>space</kbd>later</button>
+        <button class="key" data-k="undo"><kbd>Z</kbd>undo</button>
+      </div>
+      <p class="muted" style="text-align:center;margin:8px 0 0">Click a sticker on the sheet to leave just that one out (optional).</p></div>
+    <div class="side">
+      <div class="card"><h3>Taste match</h3>${sh.p == null ? `<span class="muted">learning… judge a few more sheets</span>` :
+        `<div class="row"><div class="meter" style="flex:1"><i style="width:${pct(sh.p)}"></i></div><b>${pct(sh.p)}</b></div>`}</div>
+      <div class="card"><h3>This sheet</h3><b>${live}</b> stickers would go to the site${edge ? `<br><span class="muted">${edge} cut off by the photo edge (left out)</span>` : ''}${out ? `<br><span class="muted">${out} left out by you</span>` : ''}
+        ${sh.pin ? `<div style="margin-top:6px"><a href="${sh.pin}" target="_blank" rel="noopener">open the source ↗</a></div>` : ''}
+        ${sh.lic ? `<div class="muted" style="margin-top:4px">${sh.lic}</div>` : ''}</div>
+      <div class="card"><h3>Material</h3><select id="mat">${S.materials.map(m => `<option ${m === sh.m ? 'selected' : ''}>${m}</option>`).join('')}</select></div>
+    </div></div>`;
+  const holder = $('#sheet'), stage = $('#stage');
+  const c = await sheetCanvas(sh, stage.clientWidth - 24, window.innerHeight * .64).catch(() => null);
+  if (!c) { holder.innerHTML = '<div class="empty" style="color:#ccc">This picture could not be loaded (it may have been removed).</div>'; return; }
+  holder.append(c);
+  for (const st of sh.st) {
+    const b = document.createElement('div'); b.className = 'box' + (st.x ? ' x' : '') + (st.e ? ' e' : '');
+    const [x0, y0, x1, y1] = st.b, k = c._k * (c.clientWidth / c.width);
+    Object.assign(b.style, { left: x0 * k + 'px', top: y0 * k + 'px', width: (x1 - x0) * k + 'px', height: (y1 - y0) * k + 'px' });
+    if (!st.e) b.onclick = async () => { st.x = !st.x; const r = await api('/api/exclude', { id: st.id, excluded: st.x }); S.kept_stickers = r.kept_stickers; show(); };
+    holder.append(b);
+  }
+  main.querySelector('.keys').onclick = e => { const b = e.target.closest('[data-k]'); if (b) act(b.dataset.k); };
+  $('#mat').onchange = async e => { sh.m = e.target.value; await api('/api/material', { sheet: sh.id, material: sh.m }); toast('material: ' + sh.m); };
+  for (const n of queue.slice(pos + 1, pos + 4)) loadImg(n.img).catch(() => {});
+}
+async function decide(ids, d) {
+  const items = ids.map(id => S.sheets.find(s => s.id === id));
+  undoStack.push(items.map(s => [s, s.d, s.a]));
+  items.forEach(s => { s.d = d; s.a = false; });
+  const r = await api('/api/decide', { sheets: ids, decision: d });
+  S.kept_stickers = r.kept_stickers;
+  if (r.retrained) { S.model = r.model; S.sheets.forEach(s => { if (r.scores && s.id in r.scores) s.p = r.scores[s.id]; }); toast(`learnt your taste again · ${r.model.n} sheets judged`); }
+  stats();
+}
+async function act(k) {
+  const sh = queue[pos];
+  if (k === 'undo') {
+    const h = undoStack.pop(); if (!h) return toast('nothing to undo');
+    for (const [s, d, a] of h) { s.d = d; s.a = a; await api('/api/decide', { sheets: [s.id], decision: d }); }
+    if (T[tab][1] === 'one') queue.splice(pos, 0, ...h.map(([s]) => s).filter(s => !queue.includes(s)));
+    stats(); return show();
+  }
+  if (!sh) return;
+  if (k === 'later') { queue.push(queue.splice(pos, 1)[0]); return show(); }
+  if (k === 'keep' || k === 'skip') {
+    const stage = $('#stage'); stage && stage.classList.add(k === 'keep' ? 'fly-keep' : 'fly-skip');
+    await decide([sh.id], k); await new Promise(r => setTimeout(r, 130));
+    queue.splice(pos, 1); return show();
+  }
+}
+document.addEventListener('keydown', e => {
+  if (e.target.closest && e.target.closest('select, input')) return;
+  const map = { ArrowRight: 'keep', ArrowLeft: 'skip', ' ': 'later', z: 'undo', Z: 'undo', k: 'keep', j: 'skip' };
+  if (T[tab][1] === 'one' && map[e.key]) { e.preventDefault(); act(map[e.key]); }
+});
+
+function grid() {
+  const main = $('#main');
+  if (!queue.length) { main.innerHTML = '<div class="empty">Nothing here yet.</div>'; return; }
+  main.innerHTML = `<div class="muted" style="padding:12px 14px 0">Click a sheet to flip keep ↔ skip. ${queue.length} sheets.</div><div class="grid" id="grid"></div>`;
+  const g = $('#grid');
+  for (const sh of queue) {
+    const cell = document.createElement('div'); cell.className = `cell ${sh.d || ''}`;
+    cell.innerHTML = `<img loading="lazy" src="${sh.img}" alt="">${sh.p != null ? `<span class="p">${pct(sh.p)}</span>` : ''}${sh.a ? '<span class="auto">auto</span>' : ''}`;
+    cell.onclick = async () => { const d = sh.d === 'keep' ? 'skip' : 'keep'; await decide([sh.id], d); cell.className = `cell ${d}`; };
+    g.append(cell);
+  }
+}
+$('#btn-retrain').onclick = async () => { toast('learning your taste…', 4000); S = await api('/api/retrain', {}); buildQueue(); stats(); show(); toast('learnt again'); };
+$('#btn-apply').onclick = async () => {
+  if (!confirm('Let the model keep / skip the sheets it is sure about? They are marked "auto" and you can still change them.')) return;
+  const r = await api('/api/apply', {}); S = r; buildQueue(); stats(); show(); toast(`auto: kept ${r.kept}, skipped ${r.skipped} sheets`, 3000);
+};
+async function runJob(path, body, btn, label, after) {
+  const r = await api(path, body);
+  if (!r.ok) return toast(r.msg || 'could not start');
+  btn.disabled = true;
+  const poll = async () => {
+    const j = await api('/api/job'); const last = (j.log || []).slice(-1)[0] || 'working…';
+    btn.textContent = (j.running ? last.slice(0, 48) : label);
+    if (j.running) return setTimeout(poll, 1500);
+    btn.disabled = false; S = await api('/api/state'); after && after(); buildQueue(); stats(); show(); toast(last, 6000);
+  };
+  poll();
+}
+$('#btn-publish').onclick = () => {
+  if (!confirm(`Publish ${S.kept_stickers} stickers from your kept sheets to the live site? (They are re-cut from their sources and pushed to GitHub.)`)) return;
+  runJob('/api/publish', {}, $('#btn-publish'), '⤴ Publish to the site');
+};
+$('#btn-discover').onclick = async () => {
+  const r = await api('/api/discover', { max: 30 });
+  if (!r.ok) return toast(r.msg || 'could not start');
+  const b = $('#btn-discover'); b.disabled = true;
+  const poll = async () => {
+    const j = await api('/api/job'); const last = (j.log || []).slice(-1)[0] || 'looking…';
+    b.textContent = '🔍 ' + (j.running ? last.slice(0, 48) : 'Find more like these');
+    if (j.running) return setTimeout(poll, 1500);
+    b.disabled = false; S = await api('/api/state'); tab = 'discovered'; buildQueue(); stats(); show(); toast(last, 5000);
+  };
+  poll();
+};
+(async () => { S = await api('/api/state'); buildQueue(); stats(); show(); })();
+</script>
+</body>
+</html>

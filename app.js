@@ -231,7 +231,7 @@ function dims(item, k, max) {
 function sheetOf(id) { return sheets.find(s => s.id === id); }
 function materialFor(item, sheet) {
   if (state.material !== 'auto') return state.material;
-  return (sheet && sheet.material) || 'paper';
+  return item.mat || (sheet && sheet.material) || 'paper';      // library stickers carry their own material
 }
 function makeSticker(item, mat, dw, dh) {
   const el = document.createElement('div');

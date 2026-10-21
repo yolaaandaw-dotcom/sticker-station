@@ -40,6 +40,7 @@ const D = {
                   zh: '把贴纸贴到这里 ✦<small>按住贴纸的一个角撕下来，拖到这里松手<br>把任何图片拖进页面就能变成新贴纸</small>' },
   statusTip:    { en: 'peel from a corner · wheel rotates · ⌘Z undo', zh: '从角上撕 · 滚轮旋转 · ⌘Z 撤销' },
   placed:       { en: 'placed:', zh: '已贴：' },
+  sources:      { en: 'sources', zh: '来源' },
   dropAll:      { en: 'Drop to make stickers', zh: '放开 → 变成贴纸' },
   dropCanvas:   { en: 'Drop to stick it right here', zh: '放开 → 直接贴在这里' },
   trash:        { en: '🗑 drop here to peel off', zh: '🗑 拖到这里撕掉' },
